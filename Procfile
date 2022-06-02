@@ -1,0 +1,1 @@
+web: pyhton3 manage.py migrate.txt && gunicorn sentir.wsgi
