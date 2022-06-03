@@ -1,9 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django import forms
+from memberships.models import Membership
 
-
-class Customer(AbstractBaseUser):
-    
+class Customer(AbstractBaseUser, models.Model):
+    membership_id = models.ForeignKey(Membership, null=True, on_delete=models.SET_NULL)
     password = models.CharField("Password", max_length=255)
     first_name = models.CharField("First name", max_length=255)
     last_name = models.CharField("Last name", max_length=255)

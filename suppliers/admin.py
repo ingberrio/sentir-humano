@@ -7,6 +7,6 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ["phone", "email"]
     exclude = ["password"]
     list_filter = ["is_active"]
-    list_per_page = 5
+    list_per_page = 10
     
     

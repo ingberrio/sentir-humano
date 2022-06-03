@@ -8,9 +8,10 @@ class Supplier(AbstractBaseUser):
     last_name = models.CharField("Institucion", max_length=255)
     email = models.EmailField()
     phone = models.CharField(max_length=20)
+    discount = models.CharField("Descuento", max_length=255, default=' ')
     address =  models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    createdAt = models.DateTimeField("Created At", auto_now_add=True)
+    createdAt = models.DateTimeField("Creado", auto_now_add=True)
     is_active = models.BooleanField('Activo',default=False)
     
 

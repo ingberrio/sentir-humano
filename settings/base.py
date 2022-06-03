@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'suppliers', 
     'storages',
     'django_extensions',
-    'home'
+    'home',
+    'memberships'
         
 ]
 
