@@ -7,7 +7,9 @@ from . import models
 
 @admin.register(NewUser)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'username', 'real_id', 'code_vs', 'phone', 'is_active')
-    list_editable = ('username','real_id')
-    search_fields = ('real_id', 'email')
+    list_display = ["email", "real_id", "phone", "is_active"]
+    list_editable = ["real_id"]
+    search_fields = ["real_id", "phone", "email"]
+    list_filter = ["is_active"]
+    list_per_page = 5
 

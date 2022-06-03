@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import dj_database_url 
+from dotenv import load_dotenv, find_dotenv
 from pathlib import Path
 import os
 
@@ -19,14 +20,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@3g#cdlb+pq&saznvuhntq9up%w6elw3x6$s&&h$lu8$-$p)&-'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -42,7 +35,9 @@ INSTALLED_APPS = [
     'users',
     'customers',
     'suppliers', 
-    'storages'
+    'storages',
+    'django_extensions',
+    'home'
         
 ]
 
@@ -80,12 +75,16 @@ WSGI_APPLICATION = 'sentir.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+load_dotenv(find_dotenv())
+
+DATABASES = {'default': dj_database_url.config(default='sqlite:///db.sqlite3', conn_max_age=600)}
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -117,25 +116,14 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# AWS S3 Settings
-
-AWS_ACCESS_KEY_ID = 'AKIAT5JQIK4MLUSY5BRL'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'sibtc-static'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-AWS_S3_OBJECT_PARAMETERS = {
-    'CacheControl': 'max-age=86400',
-} 
-AWS_LOCATION = 'static'
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-#LOGIN_REDIRECT_URL = '/admin'
+# LOGIN_REDIRECT_URL = '/home'
 AUTH_USER_MODEL = 'users.newuser'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

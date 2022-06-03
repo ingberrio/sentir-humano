@@ -3,6 +3,9 @@ from .models import Customer
 
 @admin.register(Customer)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'first_name', 'phone')
-    search_fields = ('phone', 'email')
+    list_display = ["first_name", "phone", "person_id", "is_active"]
+    search_fields = ["phone", "email"]
+    exclude = ["password","last_login"]
+    list_filter = ["age", "is_active"]
+    list_per_page = 5
     

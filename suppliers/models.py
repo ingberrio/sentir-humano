@@ -11,6 +11,8 @@ class Supplier(AbstractBaseUser):
     address =  models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     createdAt = models.DateTimeField("Created At", auto_now_add=True)
+    is_active = models.BooleanField('Activo',default=False)
+    
 
     USERNAME_FIELD = 'email'
     
