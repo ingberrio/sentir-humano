@@ -9,7 +9,7 @@
             <div class="row">
                  <div class="col-lg-10 mx-auto mb-4">
                     <div class="section-title text-center ">
-                        </br></br><br>
+                        </br></br><br><br>
                         <h3 class="top-c-sep">Lista de especialistas y comercios</h3>
                         <p>Programa para acceder a especialistas en la salud con tarifas preferenciales, que van desde el 20% hasta el 70%.</p>
                     </div>
@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-lg-10 mx-auto">
                     <div class="career-search mb-60">
-                        <form action="#" class="career-form mb-60">
+                        <form action="?" class="career-form mb-60" method="GET">
                             <div class="row">
                                 <div class="col-md-6 col-lg-3 my-3">
                                     <div class="input-group position-relative">
@@ -28,7 +28,7 @@
                                 </div>
                                 <div class="col-md-6 col-lg-3 my-3">
                                     <div class="select-container">
-                                        <select class="custom-select">
+                                        <select class="custom-select" name="city" value="{{ request.get.city}}">
                                             <option selected="">Ubicacion</option>
                                             <option value="1">Armenia</option>
                                             <option value="2">Cartago</option>
@@ -56,13 +56,13 @@
                             </div>
                         </form>   
                         <div class="filter-result">
-                            <p class="mb-30 ff-montserrat">Descuentos : 89</p>
-                            {% for supli in suppliers %}
+                            <p class="mb-30 ff-montserrat">Descuentos : {{ number_suppliers }}</p>
+                            {% for supli in page_obj %}
                             
                             <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
                                 <div class="job-left my-4 d-md-flex align-items-center flex-wrap">
                                     <div class="img-holder mr-md-4 mb-md-0 mb-4 mx-auto mx-md-0 d-md-none d-lg-flex">
-                                        {{supli.discount}}%
+                                        {{supli.discount}}&#37;
                                     </div>
                                     <div class="job-content">
                                         <h5 class="text-center text-md-left">{{ supli.specialty }}</h5>
@@ -93,21 +93,30 @@
                     <!-- START Pagination -->
                     <nav aria-label="Page navigation">
                         <ul class="pagination pagination-reset justify-content-center">
+                            {% if page_obj.has_previous %}
                             <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                <a class="page-link" href="?page={{page_obj.previous_page_number}}" tabindex="-1" aria-disabled="true">
                                     <i class="zmdi zmdi-long-arrow-left"></i>
                                 </a>
                             </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item d-none d-md-inline-block"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item d-none d-md-inline-block"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">8</a></li>
+                            {% endif %}
+                            
+                            {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <a class="page-link" href="#">{{ i }} </a>
+                            {% else %}
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            {% endif %}
+                            {% endfor %}
+
+                           
+                            {% if page_obj.has_next %}
                             <li class="page-item">
-                                <a class="page-link" href="#">
+                                <a class="page-link" href="?page={{page_obj.next_page_number}}">
                                     <i class="zmdi zmdi-long-arrow-right"></i>
                                 </a>
                             </li>
+                            {% endif %}
                         </ul>
                     </nav>
                     <!-- END Pagination -->

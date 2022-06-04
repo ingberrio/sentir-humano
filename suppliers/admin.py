@@ -3,10 +3,8 @@ from .models import Supplier
 
 @admin.register(Supplier)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ["specialty", "first_name", "phone"]
+    list_display = ["specialty", "first_name", "phone", "city"]
     search_fields = ["phone", "email", "specialty", "phone"]
     exclude = ["password"]
-    list_filter = ["is_active"]
+    list_filter = ["is_active", "city"]
     list_per_page = 10
-    
-    

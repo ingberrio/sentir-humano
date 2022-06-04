@@ -6,6 +6,7 @@ class Supplier(AbstractBaseUser):
     specialty = models.CharField("Especialidad", max_length=255, default='')
     first_name = models.CharField("Nombre especilista", max_length=255)
     last_name = models.CharField("Institucion", max_length=255)
+    city = models.CharField("Ciudad", max_length=255, default='')
     email = models.EmailField()
     phone = models.CharField(max_length=20)
     discount = models.CharField("Descuento", max_length=255, default=' ')

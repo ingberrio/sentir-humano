@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720.077" height="720.077" viewBox="0 0 2558 2558">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #4e63d7;
+        stroke: #000;
+        stroke-width: 1px;
+      }
+
+      .cls-2 {
+        font-size: 2500px;
+        fill: #fff;
+        font-family: Arial;
+      }
+    </style>
+  </defs>
+  <rect id="Rectángulo_redondeado_1" data-name="Rectángulo redondeado 1" class="cls-1" y="-7.531" width="2558" height="2573.061" rx="400" ry="400"/>
+  <text id="S" class="cls-2" x="453.935" y="2173.893">S</text>
+</svg>
