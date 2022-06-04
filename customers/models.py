@@ -4,7 +4,7 @@ from django import forms
 from memberships.models import Membership
 
 class Customer(AbstractBaseUser, models.Model):
-    membership_id = models.ForeignKey(Membership, null=True, on_delete=models.SET_NULL)
+    membership_id = models.ForeignKey(Membership, null=True, on_delete=models.SET_NULL, verbose_name='Membresia')
     password = models.CharField("Password", max_length=255)
     first_name = models.CharField("First name", max_length=255)
     last_name = models.CharField("Last name", max_length=255)

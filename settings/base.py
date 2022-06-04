@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'storages',
     'django_extensions',
     'home',
-    'memberships'
+    'memberships',
+    'livereload'
         
 ]
 
