@@ -6,18 +6,28 @@ from django.db.models import Q
 def home(request):
     suppliers = Supplier.objects.all()
     
-    # Search field home
+    # Search suppliers home
     
-    search_post = request.GET.get('search') # Get url parameter from a form submitting from a web page
-    if search_post:
-        suppliers = Supplier.objects.filter(Q(specialty__icontains=search_post) 
-                                          | Q(first_name__icontains=search_post)
-                                          | Q(city__icontains=search_post))
-    else:
-        # If not searched, return default posts
-        suppliers = Supplier.objects.all()
+    search_supplier = request.GET.get('search') # Get url parameter from a form submitting from home
+    search_city = request.GET.get('city')
+    search_specialty = request.GET.get('specialty')
 
-    number_suppliers = Supplier.objects.filter().count() # Numbers of suppliers
+    if search_supplier:
+        suppliers = Supplier.objects.filter(Q(specialty__icontains=search_supplier) 
+                                          | Q(first_name__icontains=search_supplier)
+                                          | Q(city__icontains=search_supplier))
+    elif search_city:
+        suppliers = Supplier.objects.filter(Q(specialty__icontains=search_city) 
+                                          | Q(first_name__icontains=search_city)
+                                          | Q(city__icontains=search_city))
+    elif search_specialty:
+        suppliers = Supplier.objects.filter(Q(specialty__icontains=search_specialty) 
+                                          | Q(first_name__icontains=search_specialty)
+                                          | Q(city__icontains=search_specialty))
+    else:
+        suppliers = Supplier.objects.all()  # If not searched, return default suppliers
+
+    number_suppliers = Supplier.objects.filter().count() # Get numbers of suppliers
     
     # Pagination 
     
@@ -37,6 +47,5 @@ def home(request):
         'suppliers': suppliers,
         'page_obj': page_obj,
         'number_suppliers': number_suppliers,
-        'search_post': search_post,
     }
     return render(request, 'home.html', context)
