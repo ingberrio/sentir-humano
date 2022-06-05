@@ -19,16 +19,16 @@
             <div class="row">
                 <div class="col-lg-10 mx-auto">
                     <div class="career-search mb-60">
-                        <form action="?" class="career-form mb-60" method="GET">
+                        <form action="?" class="career-form mb-60" method="{% url 'home' %}">
                             <div class="row">
                                 <div class="col-md-6 col-lg-3 my-3">
                                     <div class="input-group position-relative">
-                                        <input type="text" class="form-control" placeholder="Ingrese una palabra" id="keywords">
+                                        <input type="search" name="search" class="form-control" placeholder="Ingrese una palabra" id="search">
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-3 my-3">
                                     <div class="select-container">
-                                        <select class="custom-select" name="city" value="{{ request.get.city}}">
+                                        <select class="custom-select" name="" value="">
                                             <option selected="">Ubicacion</option>
                                             <option value="1">Armenia</option>
                                             <option value="2">Cartago</option>
@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-3 my-3">
-                                    <button type="button" class="btn btn-lg btn-block btn-light btn-custom" id="contact-submit">
+                                    <button type="submit" class="btn btn-lg btn-block btn-light btn-custom" id="contact-submit">
                                         Buscar
                                     </button>
                                 </div>
