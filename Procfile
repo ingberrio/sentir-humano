@@ -1,1 +1,1 @@
-web: pyhton3 manage.py migrate && gunicorn sentir.wsgi
+web: pyhton manage.py migrate && gunicorn sentir.wsgi
