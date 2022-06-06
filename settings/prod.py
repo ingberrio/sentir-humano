@@ -8,7 +8,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    'sentir-humano-production.herokuapp.com'
+    'https://sentir-humano-production.herokuapp.com/'
     ]
 
 
