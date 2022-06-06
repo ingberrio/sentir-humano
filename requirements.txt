@@ -36,6 +36,7 @@ instagrapi==1.16.17
 instapy==0.6.16
 jmespath==1.0.0
 jsonschema==2.6.0
+livereload==2.6.3
 MeaningCloud-python==2.0.0
 outcome==1.1.0
 Pillow==9.1.1
