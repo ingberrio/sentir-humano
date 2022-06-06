@@ -1,1 +1,3 @@
-web: python3 manage.py migrate && gunicorn sentir.wsgi
+web: gunicorn sentir.wsgi:application --log-file - --log-level debug
+python manage.py collectstatic --noinput
+manage.py migrate
