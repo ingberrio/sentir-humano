@@ -9,7 +9,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = [
     'sentir-humano-production.herokuapp.com'
-    
     ]
 
 
