@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-lg-10 mx-auto">
                     <div class="career-search mb-60">
-                        <form action="?" class="career-form mb-60" method="{% url 'home' %}">
+                        <form action="#descount" class="career-form mb-60" method="{% url 'home' %}" >
                             <div class="row">
                                 <div class="col-md-6 col-lg-3 my-3">
                                     <div class="input-group position-relative">
@@ -49,14 +49,14 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 col-lg-3 my-3">
-                                    <button type="submit" class="btn btn-lg btn-block btn-light btn-custom" id="contact-submit">
+                                    <button type="submit" class="btn btn-lg btn-block btn-light btn-custom" id="contact-submit" >
                                         Buscar
                                     </button>
                                 </div>
                             </div>
                         </form>   
-                        <div class="filter-result">
-                            <p class="mb-30 ff-montserrat">Descuentos : {{ number_suppliers }}</p>
+                        <div class="filter-result" >
+                            <p class="mb-30 ff-montserrat" id="descount">Descuentos : {{ number_suppliers }}</p>
                             {% for supli in page_obj %}
                             
                             <div class="job-box d-md-flex align-items-center justify-content-between mb-30">
@@ -87,7 +87,7 @@
                                     <a href="tel:+573178935849" class="btn d-block w-100 d-sm-inline-block btn-outline-info">Llamar Cita</a>
                                 </div>
                             </div>
-                            <strong></strong>
+                            <strong ></strong>
                             {% endfor %}
                             
                     <!-- START Pagination -->

@@ -27,7 +27,9 @@ def home(request):
     else:
         suppliers = Supplier.objects.all()  # If not searched, return default suppliers
 
-    number_suppliers = Supplier.objects.filter().count() # Get numbers of suppliers
+    # Get numbers of suppliers
+    
+    number_suppliers = Supplier.objects.filter().count() 
     
     # Pagination 
     
@@ -48,4 +50,4 @@ def home(request):
         'page_obj': page_obj,
         'number_suppliers': number_suppliers,
     }
-    return render(request, 'home.html', context)
+    return render(request, 'home.html/', context)
