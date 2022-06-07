@@ -9,7 +9,7 @@ class Supplier(AbstractBaseUser):
     city = models.CharField("Ciudad", max_length=255, default='')
     email = models.EmailField()
     phone = models.CharField("Telefono principal",max_length=20)
-    phone_two = models.CharField("Telefono secundario",max_length=20)
+    phone_two = models.CharField("Telefono secundario",max_length=20, default=' ')
     discount = models.CharField("Descuento", max_length=255, default=' ')
     address =  models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
