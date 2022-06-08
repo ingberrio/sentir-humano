@@ -25,6 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -121,7 +122,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-# LOGIN_REDIRECT_URL = '/home'
 AUTH_USER_MODEL = 'users.newuser'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 

@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from memberships.models import Membership
+from suppliers.models import Supplier
 from users.models import NewUser
+from django.utils import timezone
 
 class Customer(AbstractBaseUser, models.Model):
     membership_id = models.ForeignKey(Membership, null=True, on_delete=models.SET_NULL, verbose_name='Membresia')
@@ -24,3 +26,16 @@ class Customer(AbstractBaseUser, models.Model):
     
     def __str__(self):
         return self.first_name
+
+class Appointment(models.Model):
+    type_appointment = models.CharField("Tipo de cita", max_length=255)
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
+    supplier = models.ForeignKey(Supplier, null=True, on_delete=models.SET_NULL, verbose_name='Especialidad')
+    start_date = models.DateTimeField(default=timezone.now)
+    end_date = models.DateTimeField(null=True, blank=True)
+    about = models.TextField("Observaciones", max_length=500, blank=True)
+    is_staff = models.BooleanField("Empleado", default=False)
+    is_active = models.BooleanField("Activo", default=False)
+
+    def __str__(self):
+        return self.type_appointment

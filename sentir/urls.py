@@ -18,11 +18,18 @@ from django.contrib import admin
 from django.urls import path
 from home import views as home_views
 from django.conf.urls.static import static
+from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_views.home, name='home'),
 ]
+
+
+admin.site.site_header = 'SentirHumano admin'
+admin.site.site_title = 'SentirHumano admin'
+admin.site.site_url = 'http://sentirHumano.com.co/'
+admin.site.index_title = 'SentirHumano administration'
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
