@@ -1,6 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-
+from django.contrib.auth.models import AbstractBaseUser
+from django.utils.translation import gettext_lazy as _
 
 class Supplier(AbstractBaseUser):
     specialty = models.CharField("Especialidad", max_length=255, default='')
@@ -16,6 +16,9 @@ class Supplier(AbstractBaseUser):
     createdAt = models.DateTimeField("Creado", auto_now_add=True)
     is_active = models.BooleanField('Activo',default=False)
     
+    class Meta:
+        verbose_name = _("Proveedores")
+        verbose_name_plural = _("Proveedores")
 
     USERNAME_FIELD = 'email'
     

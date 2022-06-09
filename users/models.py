@@ -2,7 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-
+from django.utils.translation import gettext_lazy as _
 
 class CustomAccountManager(BaseUserManager):
 
@@ -46,6 +46,9 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(_('Empleado'),default=False)
     is_active = models.BooleanField(_('Activo'),default=False)
     
+    class Meta:
+        verbose_name = _("Usuarios")
+        verbose_name_plural = _("Usuarios")
      
     objects = CustomAccountManager()
 

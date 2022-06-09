@@ -5,6 +5,8 @@ from suppliers.models import Supplier
 from users.models import NewUser
 from django.utils import timezone
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
+
 
 class Customer(AbstractBaseUser, models.Model):
     membership_id = models.ForeignKey(Membership, null=True, on_delete=models.SET_NULL, verbose_name='Membresia')
@@ -22,6 +24,10 @@ class Customer(AbstractBaseUser, models.Model):
     description = models.TextField("Notas", blank=True, null=True)
     createdAt = models.DateTimeField("Created At", auto_now_add=True)
     is_active = models.BooleanField("Activo", default=False)
+
+    class Meta:
+        verbose_name = _("Clientes")
+        verbose_name_plural = _("Clientes")
     
     USERNAME_FIELD = 'email'
     
@@ -46,6 +52,10 @@ class Appointment(models.Model):
     about = models.TextField("Observaciones", max_length=500, blank=True)
     is_confirm = models.BooleanField("Confirmada", default=False)
     is_cancel = models.BooleanField("Cancelada", default=False)
+
+    class Meta:
+        verbose_name = _("Citas")
+        verbose_name_plural = _("Citas")
 
     # Automatically set to current user to field Author when saved
 
