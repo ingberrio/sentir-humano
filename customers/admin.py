@@ -1,5 +1,25 @@
 from django.contrib import admin
 from .models import Customer, Appointment
+import csv
+from django.http import HttpResponse
+
+class ExportCsvMixin:
+    def export_as_csv(self, request, queryset):
+
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    export_as_csv.short_description = "Exportar"
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
@@ -11,13 +31,17 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_per_page = 10
 
 @admin.register(Customer)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_editable = ["is_active"]
-    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", "person_id"]
+    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id"]
     search_fields = ["phone", "email", "person_id"]
+    readonly_fields = ("phone", "email",)
+    list_display_links = ["first_name", "person_id"]
     exclude = ["password","last_login"]
     list_filter = ["age", "is_active"]
     list_per_page = 10
+    actions = ["export_as_csv"]
+
     fieldsets = (
         (None, {
             'fields': ('first_name','last_name','person_id', 'phone', 
