@@ -1,3 +1,4 @@
+from attr import fields
 from django.contrib import admin
 from .models import Customer, Appointment
 import csv
@@ -24,18 +25,28 @@ class ExportCsvMixin:
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
     list_editable = ['is_confirm', 'is_cancel']
-    list_display = ["added_by", "type_appointment", "customer", 'supplier', "start_date", "is_confirm", "is_cancel"]
+    list_display = ["customer", "type_appointment",  "added_by", 'supplier',  "is_confirm", "is_cancel"]
     search_fields = ['customer__first_name', 'customer__person_id']
+    readonly_fields = ('start_date','added_by')
     list_filter = ["start_date", "supplier", "added_by" ]
     exclude = ["password"]
     list_per_page = 10
 
+    # Method that create user on field added_by
+
+    def save_form(self, request, form, change):
+        obj = super().save_form(request, form, change)
+        if not change:
+            obj.added_by = request.user
+        return obj
+        
 @admin.register(Customer)
 class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
+    
+    readonly_fields = ('start_date',)
     list_editable = ["is_active"]
     list_display = ["first_name", "phone", "person_id", "is_active", "membership_id"]
     search_fields = ["phone", "email", "person_id"]
-    readonly_fields = ("phone", "email",)
     list_display_links = ["first_name", "person_id"]
     exclude = ["password","last_login"]
     list_filter = ["age", "is_active"]
@@ -44,8 +55,8 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
 
     fieldsets = (
         (None, {
-            'fields': ('first_name','last_name','person_id', 'phone', 
-            'membership_id', 'asesor_id', 'way_to_pay','value', 'start_date', 
+            'fields': ('start_date','first_name','last_name','person_id', 'phone', 
+            'membership_id', 'asesor_id', 'way_to_pay','value',  
             'description', 'is_active')
         }),
         ('Opciones avanzadas', {

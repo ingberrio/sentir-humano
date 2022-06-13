@@ -35,7 +35,7 @@ class Customer(AbstractBaseUser, models.Model):
     affiliate_six_customer = models.ForeignKey("self", related_name='six', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Afiliado Seis')
     affiliate_seven_customer = models.ForeignKey("self", related_name='seven', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Afiliado Siete')
     email = models.EmailField(blank=True)
-    age = models.PositiveIntegerField("Edad", blank=True)
+    age = models.PositiveIntegerField("Edad", blank=True, null=True)
     city = models.CharField("Ciudad", blank=True, max_length=20, default=' ')
     neigbord = models.CharField("Barrio", blank=True, max_length=20, default=' ')
     phone = models.CharField("Telefono", blank=True, max_length=20)
@@ -49,7 +49,12 @@ class Customer(AbstractBaseUser, models.Model):
         verbose_name_plural = _("Clientes")
     
     USERNAME_FIELD = 'email'
-    
+
+    def save(self, *args, **kwargs):
+        if self.person_id == "Sentir Humanos's App":
+            return # Sentir shall never have him own App!
+        else:
+            super().save(*args, **kwargs) 
 
     def __str__(self):
         return self.person_id
@@ -61,13 +66,12 @@ class Appointment(models.Model):
         ('2', 'Tipo 2'),
         ('3', 'Tipo 3'),
     ]
-
+    start_date = models.DateTimeField("Inicio solicitud", default=timezone.now)
     type_appointment = models.CharField("Tipo de cita", max_length=255, choices=APPOIMENT_CHOICES)
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
     supplier = models.ForeignKey(Supplier, null=True, on_delete=models.SET_NULL, verbose_name='Especialidad')
-    start_date = models.DateTimeField("Inicio solicitud", default=timezone.now)
     end_date = models.DateTimeField("Fecha finalizacion", null=True, blank=True)
-    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name="Creado por")
+    added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
     about = models.TextField("Observaciones", max_length=500, blank=True)
     is_confirm = models.BooleanField("Confirmada", default=False)
     is_cancel = models.BooleanField("Cancelada", default=False)
@@ -75,14 +79,6 @@ class Appointment(models.Model):
     class Meta:
         verbose_name = _("Citas")
         verbose_name_plural = _("Citas")
-
-    # Automatically set to current user to field Author when saved
-
-    def save_model(self, request, obj, form, change):
-        if not obj.pk:
-            # Only set added_by during the first save.
-            obj.added_by = request.user
-        super().save_model(request, obj, form, change)
-
+    
     def __str__(self):
         return self.type_appointment
