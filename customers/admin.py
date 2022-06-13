@@ -20,10 +20,11 @@ class ExportCsvMixin:
 
         return response
 
-    export_as_csv.short_description = "Exportar"
+    export_as_csv.short_description = "Exportar a CSV"
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
+    
     list_editable = ['is_confirm', 'is_cancel']
     list_display = ["customer", "type_appointment",  "added_by", 'supplier',  "is_confirm", "is_cancel"]
     search_fields = ['customer__first_name', 'customer__person_id']
@@ -31,6 +32,7 @@ class AppointmentAdmin(admin.ModelAdmin):
     list_filter = ["start_date", "supplier", "added_by" ]
     exclude = ["password"]
     list_per_page = 10
+    actions = ["generate_bill"]
 
     # Method that create user on field added_by
 
@@ -39,6 +41,17 @@ class AppointmentAdmin(admin.ModelAdmin):
         if not change:
             obj.added_by = request.user
         return obj
+
+    # showing current user accounts appoiments
+    
+    def get_queryset(self, request):
+        query = super(AppointmentAdmin, self).get_queryset(request)
+        if request.user.is_superuser: # just using request.user attributes
+            filtered_query = query.filter()
+        else:
+            filtered_query = query.filter(added_by=request.user.id)
+        return filtered_query
+    
         
 @admin.register(Customer)
 class UserAdmin(admin.ModelAdmin, ExportCsvMixin):

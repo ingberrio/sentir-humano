@@ -123,6 +123,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 AUTH_USER_MODEL = 'users.newuser'
+AUTHENTICATION_BACKENDS = (
+    'users.backends.CustomEmailAuthenticationBackend',
+    'users.backends.CaseInsensitiveModelBackend',
+    'django.contrib.auth.backends.AllowAllUsersModelBackend',
+)
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 # Default primary key field type
