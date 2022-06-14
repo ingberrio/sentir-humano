@@ -69,8 +69,12 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     fieldsets = (
         (None, {
             'fields': ('start_date','first_name','last_name','person_id', 'phone', 
-            'membership_id', 'asesor_id', 'way_to_pay','value',  
-            'description', 'is_active')
+            'asesor_id', 'description', 'is_active')
+            
+        }),
+        ('Membresia',{
+            'classes': ('collapse',),
+            'fields': ([ 'membership_id', 'way_to_pay','value',  'createdAt','endsAt']),
         }),
         ('Opciones avanzadas', {
             'classes': ('collapse',),
