@@ -9,23 +9,53 @@ from django.utils import timezone
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
-class Customer(AbstractBaseUser, models.Model):
-    
-    PAY_CHOICES = [
+
+PAY_CHOICES = [
         ('1', 'Contado'),
         ('2', 'Quincenal'),
         ('3', 'Mensual'),
         ('4', 'Anual'),
-    ]
+]
+
+STATUS = [
+        ('DIGITADO', 'DIGITADO'),
+        ('CONTABILIZADO', 'CONTABILIZADO'),
+        ('REVISADO', 'REVISADO'),
+]
+
+PAY_METHOD = [
+        ('BANCOLOMBIA', 'BANCOLOMBIA'),
+        ('BANCO DE BOG.', 'BANCO DE BOG.'),
+        ('DAVIVIENDA', 'DAVIVIENDA'),
+        ('EFECTIVO', 'EFECTIVO'),
+        ('DATAFONO', 'DATAFONO'),
+        ('OTRO', 'OTRO')
+]
+
+STATUS_MEMBERSHIP =[
+    ('COBRO', 'COBRO'),
+    ('PAGO', 'PAGO'),
+    ('INCONVENIENTE', 'INCONVENIENTE'),
+    ('INACTIVO', 'INCATIVO')
+]
+
+GENER = [
+    ('FEMENINO', 'FEMENINO'),
+    ('MASCULINO', 'MASCULINO'),
+    ('OTRO', 'OTRO'),
+]
+class Customer(AbstractBaseUser, models.Model):
     
     first_name = models.CharField("Nombres", max_length=255)
     last_name = models.CharField("Apellidos", max_length=255)
     person_id = models.CharField("Cedula", max_length=20, default=' ')
     membership_id = models.ForeignKey(Membership, null=True, blank=True, on_delete=models.SET_NULL, verbose_name='Membresia')
     asesor_id = models.ForeignKey(NewUser, null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Asesor encargado', default='2')
+    collector = models.ForeignKey(NewUser, related_name='collector', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Cobrador')
+    is_collector = models.BooleanField("Cobro RF.", default=False)
     way_to_pay = models.CharField("Tipo de pago", blank=True, null=True, max_length=255, choices=PAY_CHOICES)
     start_date = models.DateTimeField("Fecha de Suscripcion", null=True, blank=True, default=datetime.now())
-    value = models.CharField("Valor", null=True, blank=True, max_length=10)
+    value = models.FloatField("Valor", null=True, blank=True, max_length=10)
     password = models.CharField("Password", max_length=255)
     affiliate_one_customer = models.ForeignKey("self", related_name='one', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Afiliado Uno')
     affiliate_two_customer = models.ForeignKey("self", related_name='two', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Afiliado Dos')
@@ -44,7 +74,10 @@ class Customer(AbstractBaseUser, models.Model):
     createdAt = models.DateTimeField("Inicio Cobro",blank=True, null=True)
     endsAt = models.DateTimeField('Finalizacion', blank=True, null=True)
     is_active = models.BooleanField("Activo", default=False)
-
+    is_main = models.BooleanField("Titular", default=False)
+    status_membership = models.CharField('Estado', choices=STATUS_MEMBERSHIP, default='DIGITADO', max_length=100)
+    gener = models.CharField('Genero', choices=GENER, blank=True, default= ' ', max_length=100)
+    
     class Meta:
         verbose_name = _("Clientes")
         verbose_name_plural = _("Clientes")
@@ -58,7 +91,8 @@ class Customer(AbstractBaseUser, models.Model):
             super().save(*args, **kwargs) 
 
     def __str__(self):
-        return self.person_id
+        cadena="C.C: "+self.person_id+" - "+self.first_name
+        return cadena
 
 class Appointment(models.Model):
     
@@ -83,3 +117,16 @@ class Appointment(models.Model):
     
     def __str__(self):
         return self.type_appointment
+
+class Invoice(models.Model):
+    customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
+    contribution_date = models.DateTimeField("Fecha de aporte", default=timezone.now)
+    pay_method = models.CharField("Metodo de pago",choices=PAY_METHOD, default='DIGITADO', max_length=100)
+    full_payment = models.FloatField('Total abono', null=True, blank=True)
+    balance = models.FloatField('Saldo', null=True, blank=True)
+    status = models.CharField('Estado admin', choices=STATUS, default='DIGITADO', max_length=100)
+    notes = models.TextField("Notas", max_length=500, blank=True)
+    
+    class Meta:
+        verbose_name = _("Recibos")
+        verbose_name_plural = _("Recibos")

@@ -10,8 +10,9 @@ class Membership(models.Model):
     is_active = models.BooleanField("Activo", default=False)
 
     class Meta:
-        verbose_name = _("Membresia")
-        verbose_name_plural = _("Membresia")
+        verbose_name = _("Cobro")
+        verbose_name_plural = _("Cobro")
     
     def __str__(self):
-        return self.name
+        cadena=self.name+" - "+self.value
+        return cadena

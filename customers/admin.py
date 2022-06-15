@@ -1,6 +1,6 @@
 from attr import fields
 from django.contrib import admin
-from .models import Customer, Appointment
+from .models import Customer, Appointment, Invoice
 import csv
 from django.http import HttpResponse
 
@@ -21,6 +21,11 @@ class ExportCsvMixin:
         return response
 
     export_as_csv.short_description = "Exportar a CSV"
+
+@admin.register(Invoice)
+class InvoiceAdmin(admin.ModelAdmin):
+    list_display = ["customer", "contribution_date"]
+    readonly_fields = ('contribution_date',)
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
@@ -58,27 +63,27 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     
     readonly_fields = ('start_date',)
     list_editable = ["is_active"]
-    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id"]
+    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", 'status_membership', 'gener']
     search_fields = ["phone", "email", "person_id"]
     list_display_links = ["first_name", "person_id"]
     exclude = ["password","last_login"]
-    list_filter = ["age", "is_active"]
+    list_filter = ["age", "is_active", "membership_id" ]
     list_per_page = 10
     actions = ["export_as_csv"]
 
     fieldsets = (
         (None, {
-            'fields': ('start_date','first_name','last_name','person_id', 'phone', 
-            'asesor_id', 'description', 'is_active')
+            'fields': ('start_date','first_name','last_name','person_id','status_membership', 'phone', 
+            'asesor_id', 'endsAt', 'description', 'is_active', 'is_main')
             
         }),
-        ('Membresia',{
+        ('Cobro',{
             'classes': ('collapse',),
-            'fields': ([ 'membership_id', 'way_to_pay','value',  'createdAt','endsAt']),
+            'fields': ([ 'membership_id', 'way_to_pay','value', 'collector','is_collector','createdAt']),
         }),
         ('Opciones avanzadas', {
             'classes': ('collapse',),
-            'fields': ([ 'email', 'age', 'city', 'neigbord', 'address']),
+            'fields': ([ 'email', 'age','gener', 'city', 'neigbord', 'address']),
         }),
         ('Afiliados', {
             'classes': ('collapse',),
