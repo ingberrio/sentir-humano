@@ -127,7 +127,8 @@ class Invoice(models.Model):
     balance = models.FloatField('Saldo', null=True, blank=True)
     status = models.CharField('Estado admin', choices=STATUS, default='DIGITADO', max_length=100)
     notes = models.TextField("Notas", max_length=500, blank=True)
-    
+    added_by = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
+
     class Meta:
         verbose_name = _("Recibos")
         verbose_name_plural = _("Recibos")

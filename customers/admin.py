@@ -23,8 +23,27 @@ class ExportCsvMixin:
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ["customer", "contribution_date"]
+    list_display = ["customer", "contribution_date", 'added_by']
     readonly_fields = ('contribution_date',)
+
+    # Method that create user on field added_by
+
+    def save_form(self, request, form, change):
+        obj = super().save_form(request, form, change)
+        if not change:
+            obj.added_by = request.user
+        return obj
+
+    # showing current user accounts appoiments
+    
+    def get_queryset(self, request):
+        query = super(InvoiceAdmin, self).get_queryset(request)
+        if request.user.is_superuser: # just using request.user attributes
+            filtered_query = query.filter()
+        else:
+            filtered_query = query.filter(added_by=request.user.id)
+        return filtered_query
+    
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
