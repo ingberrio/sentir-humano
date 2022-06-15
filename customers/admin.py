@@ -1,4 +1,3 @@
-from attr import fields
 from django.contrib import admin
 from .models import Customer, Appointment, Invoice
 import csv
@@ -61,7 +60,7 @@ class AppointmentAdmin(admin.ModelAdmin):
 @admin.register(Customer)
 class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     
-    readonly_fields = ('start_date',)
+    readonly_fields = ('start_date', 'creator_by' )
     list_editable = ["is_active"]
     list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", 'status_membership', 'gener']
     search_fields = ["phone", "email", "person_id"]
@@ -83,7 +82,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         }),
         ('Opciones avanzadas', {
             'classes': ('collapse',),
-            'fields': ([ 'email', 'age','gener', 'city', 'neigbord', 'address']),
+            'fields': (['creator_by', 'email', 'age','gener', 'city', 'neigbord', 'address']),
         }),
         ('Afiliados', {
             'classes': ('collapse',),
@@ -94,4 +93,20 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
             ]),
         }),
     )
+    
+    # Method that create user on field added_by
+    def save_form(self, request, form, change):
+        obj = super().save_form(request, form, change)
+        if not change:
+            obj.creator_by = request.user
+        return obj
+
+    # showing current user accounts appoiments
+    def get_queryset(self, request):
+        query = super(UserAdmin, self).get_queryset(request)
+        if request.user.is_superuser: # just using request.user attributes
+            filtered_query = query.filter()
+        else:
+            filtered_query = query.filter(creator_by=request.user.id)
+        return filtered_query
     

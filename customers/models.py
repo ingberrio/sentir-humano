@@ -70,6 +70,7 @@ class Customer(AbstractBaseUser, models.Model):
     neigbord = models.CharField("Barrio", blank=True, max_length=20, default=' ')
     phone = models.CharField("Telefono", blank=True, max_length=20)
     address =  models.CharField("Dirección", blank=True, null=True, max_length=255)
+    creator_by = models.ForeignKey(NewUser, related_name='created_by', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Creado por')
     description = models.TextField("Notas", blank=True, null=True)
     createdAt = models.DateTimeField("Inicio Cobro",blank=True, null=True)
     endsAt = models.DateTimeField('Finalizacion', blank=True, null=True)
