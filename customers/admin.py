@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
 from .models import Customer, Appointment, Invoice
 import csv
@@ -24,7 +25,8 @@ class ExportCsvMixin:
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = ["customer", "contribution_date", 'added_by']
-    readonly_fields = ('contribution_date',)
+    readonly_fields = ('contribution_date','added_by')
+    search_fields = ['customer__first_name', 'customer__person_id']
 
     # Method that create user on field added_by
 
@@ -43,13 +45,13 @@ class InvoiceAdmin(admin.ModelAdmin):
         else:
             filtered_query = query.filter(added_by=request.user.id)
         return filtered_query
-    
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
     
     list_editable = ['is_confirm', 'is_cancel']
     list_display = ["customer", "type_appointment",  "added_by", 'supplier',  "is_confirm", "is_cancel"]
+    fields = ('start_date', 'added_by', 'customer', 'type_appointment', 'supplier','end_date', 'about', 'is_confirm', 'is_cancel')
     search_fields = ['customer__first_name', 'customer__person_id']
     readonly_fields = ('start_date','added_by')
     list_filter = ["start_date", "supplier", "added_by" ]
@@ -79,16 +81,15 @@ class AppointmentAdmin(admin.ModelAdmin):
 @admin.register(Customer)
 class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     
-    readonly_fields = ('start_date', 'creator_by' )
     list_editable = ["is_active"]
-    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", 'status_membership', 'gener']
+    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", 'status_membership', 'gener', 'is_collector']
     search_fields = ["phone", "email", "person_id"]
     list_display_links = ["first_name", "person_id"]
     exclude = ["password","last_login"]
-    list_filter = ["age", "is_active", "membership_id" ]
+    list_filter = ["age", "is_active", "membership_id", "is_collector" ]
     list_per_page = 10
     actions = ["export_as_csv"]
-
+          
     fieldsets = (
         (None, {
             'fields': ('start_date','first_name','last_name','person_id','status_membership', 'phone', 
@@ -97,11 +98,11 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         }),
         ('Cobro',{
             'classes': ('collapse',),
-            'fields': ([ 'membership_id', 'way_to_pay','value', 'collector','is_collector','createdAt']),
+            'fields': ([ 'creator_by','membership_id', 'way_to_pay','value', 'collector','is_collector','createdAt', 'address_to_pay']),
         }),
         ('Opciones avanzadas', {
             'classes': ('collapse',),
-            'fields': (['creator_by', 'email', 'age','gener', 'city', 'neigbord', 'address']),
+            'fields': ([ 'email', 'age','birth_day','gener', 'city', 'neigbord', 'address']),
         }),
         ('Afiliados', {
             'classes': ('collapse',),
@@ -118,8 +119,9 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         obj = super().save_form(request, form, change)
         if not change:
             obj.creator_by = request.user
+            obj.collector = request.user
         return obj
-
+    
     # showing current user accounts appoiments
     def get_queryset(self, request):
         query = super(UserAdmin, self).get_queryset(request)
@@ -128,4 +130,13 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         else:
             filtered_query = query.filter(creator_by=request.user.id)
         return filtered_query
+
+    # Just read if not a superuser
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser:
+            return super(UserAdmin, self).get_readonly_fields(request, obj)
+        else:
+            return ('collector', 'status_membership', 'creator_by')
+
+    
     
