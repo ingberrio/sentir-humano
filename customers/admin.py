@@ -92,7 +92,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
           
     fieldsets = (
         (None, {
-            'fields': ('start_date','first_name','last_name','person_id','status_membership', 'phone', 
+            'fields': ('start_date','first_name','last_name','person_id', 'age','status_membership', 'phone', 
             'asesor_id', 'endsAt', 'description', 'is_active', 'is_main')
             
         }),
@@ -102,7 +102,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         }),
         ('Opciones avanzadas', {
             'classes': ('collapse',),
-            'fields': ([ 'email', 'age','birth_day','gener', 'city', 'neigbord', 'address']),
+            'fields': ([ 'email', 'birth_day','gener', 'city', 'neigbord', 'address']),
         }),
         ('Afiliados', {
             'classes': ('collapse',),

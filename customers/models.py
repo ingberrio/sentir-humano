@@ -71,7 +71,7 @@ class Customer(AbstractBaseUser, models.Model):
     #Advance section
     email = models.EmailField(blank=True)
     birth_day = models.DateField('Fecha de nacimiento', blank=True, null=True)
-    age = models.PositiveIntegerField("Edad", blank=True, null=True, default='')
+    age = models.PositiveIntegerField("Edad", null=True, default='')
     city = models.CharField("Ciudad", blank=True, max_length=20, default=' ')
     neigbord = models.CharField("Barrio", blank=True, max_length=20, default=' ')
     phone = models.CharField("Telefono", blank=True, max_length=20)
