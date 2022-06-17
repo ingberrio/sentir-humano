@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Nosotros{% endblock %}
+
+{% block about %}
+
+<div class="faq_area section_padding_130" id="faq">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-8 col-lg-6">
+                <!-- Section Heading-->
+                <div class="section_heading text-center wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                    <br><br><br>
+                    <h3><span>¿Quiénes</span> somos?</h3>
+                    <br>
+                    <p>Democratizamos el acceso al servicio de salud especializado y nuestra misión es abordar un problema social de acceso a la salud equitativa.</p>
+                    <br>
+                    <div class="line"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <!-- FAQ Area-->
+            <div class="col-12 col-sm-10 col-lg-8">
+                <div class="accordion faq-accordian" id="faqAccordion">
+                    <div class="card border-0 wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                        <div class="card-header" id="headingOne">
+                            <h6 class="mb-0 collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">¿Cómo lo hacemos?<span class="lni-chevron-up"></span></h6>
+                        </div>
+                        <div class="collapse" id="collapseOne" aria-labelledby="headingOne" data-parent="#faqAccordion">
+                            <div class="card-body">
+                                <p>SENTIR HUMANO S.A.S se regocija de servir esencialmente con amor, brindando atención, apoyado en un equipo humano y uso de recursos
+                                    tecnológicos de actual generación, en todo lo relacionado con promoción y difusión de servicios integrales; mediante los cuales las
+                                    familias colombianas sin excepción, podrán favorecerse a través de nuestros variados beneficios promocionados y ofertados con nuestra
+                                    credencial de descuentos en salud, recreación, educación y comercio, garantizando nuestra labor y calidad con verdadero impacto social. 
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-0 wow fadeInUp" data-wow-delay="0.3s" style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
+                        <div class="card-header" id="headingTwo">
+                            <h6 class="mb-0 collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">¿Por qué lo hacemos?<span class="lni-chevron-up"></span></h6>
+                        </div>
+                        <div class="collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#faqAccordion">
+                            <div class="card-body">
+                                <p>Porque nos encanta promocionar e impulsar la región, con proyección nacional; fundamentados en principios y valores
+                                    humanos que sustentan los servicios y beneficios brindados por todos los miembros de nuestro equipo de trabajo, así como
+                                    de los proveedores empresariales, para convertirnos próximamente en líderes; mejorando aún más, la calidad de los servicios
+                                    brindados a todas las familias beneficiarias de nuestros excepcionales programas, con absoulto amor y verdadero compromiso
+                                    social y grandes generadores de empleo.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card border-0 wow fadeInUp" data-wow-delay="0.4s" style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">
+                        <div class="card-header" id="headingThree">
+                            <h6 class="mb-0 collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">¿Qué hacemos?<span class="lni-chevron-up"></span></h6>
+                        </div>
+                        <div class="collapse" id="collapseThree" aria-labelledby="headingThree" data-parent="#faqAccordion">
+                            <div class="card-body">
+                                <p>¡Ayudar a la gente!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Support Button-->
+                <div class="support-button text-center d-flex align-items-center justify-content-center mt-4 wow fadeInUp" data-wow-delay="0.5s" style="visibility: visible; animation-delay: 0.5s; animation-name: fadeInUp;">
+                    <i class="lni-emoji-sad"></i>
+                    <p class="mb-0 px-2">¿Quieres preguntar algo?</p>
+                    <br></br>
+                    
+                </div>
+                <div class="job-right my-4 flex-shrink-0">
+                    <a href="https://api.whatsapp.com/send?phone=+573178935849&text=Quiero%20una%20cita%20con%20{{ supli.specialty }} - %20{{supli.first_name}}%20{{supli.phone}}" class="btn d-block w-100 d-sm-inline-block btn-outline-success">Whatsapp</a>
+                </div>
+                <div class="job-right my-4 flex-shrink-0">
+                    <a href="tel:+573178935849" class="btn d-block w-100 d-sm-inline-block btn-outline-info">Llamanos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

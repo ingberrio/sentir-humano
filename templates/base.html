@@ -31,6 +31,9 @@
             <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item active">
+            <a class="nav-link" href="{% url 'about' %}">Nosotros <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
             <a class="nav-link" href="/admin">Admin <span class="sr-only">(current)</span></a>
           </li>
         </ul>
@@ -38,6 +41,9 @@
     </nav>
     <div class="container">
       {% block main %}{% endblock %}
+    </div>
+    <div class="container">
+      {% block about %}{% endblock %}
     </div>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

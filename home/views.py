@@ -51,3 +51,6 @@ def home(request):
         'number_suppliers': number_suppliers,
     }
     return render(request, 'home.html/', context)
+
+def about(request):
+    return render(request, 'about.html/')
