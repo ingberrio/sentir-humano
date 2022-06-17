@@ -1,19 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="127.9" height="127.9" viewBox="0 0 2558 2558">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="92.85" height="93.45" viewBox="0 0 1857 1869">
   <defs>
     <style>
       .cls-1 {
-        fill: #4e63d7;
-        stroke: #000;
-        stroke-width: 1px;
-      }
-
-      .cls-2 {
-        font-size: 2500px;
-        fill: #fff;
-        font-family: Arial;
+        fill: #fefeff;
+        filter: url(#filter);
       }
     </style>
+    <filter id="filter" x="0" y="0" width="1857" height="1869" filterUnits="userSpaceOnUse">
+      <feOffset result="offset" dx="-11.258" dy="6.5" in="SourceAlpha"/>
+      <feGaussianBlur result="blur" stdDeviation="5.385"/>
+      <feFlood result="flood" flood-opacity="0.35"/>
+      <feComposite result="composite" operator="in" in2="blur"/>
+      <feBlend result="blend" in="SourceGraphic"/>
+    </filter>
   </defs>
-  <rect id="Rectángulo_redondeado_1" data-name="Rectángulo redondeado 1" class="cls-1" y="-7.531" width="2558" height="2573.061" rx="400" ry="400"/>
-  <text id="S" class="cls-2" x="453.935" y="2173.893">S</text>
+  <rect id="Rectángulo_redondeado_1" data-name="Rectángulo redondeado 1" class="cls-1" x="39" y="21.469" width="1800" height="1810.591" rx="400" ry="400"/>
+  <image id="Capa_2" data-name="Capa 2" x="98" y="553" width="1681" height="607" xlink:href="data:img/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAAAeCAYAAACyqDnLAAAGTElEQVRogeWZaWxc1RXHf+fOGzv22I4hTksCKiRhkSCggCiipaWkIWGRuiCQEAKJTSxfgaAivsAnNoWq8K2FQBGlqqqqrUBAQGJpFVUlKIKwCIgSsUMCNomN7Zl5yz3ovjkTXiZjYhLHBPsvHb19uf/7v2e5VzT+BbtBggl+OCb7vEq2o4YfifNjPxrjxxJ0PEVrGVrP0NijqYfMo5mCBrMXpkBiFvYzs8Z+hOcoPIvwHCHKQu/dD8bT/kPHk0O6x5O5XdWkv1JN5nZW0z6pJnOpJb2+lvVVa0nvWC3rHa6lPUP1rGdbnFU+TpKu92Pp3Frvij6qzykTz4lIOiPicom0o0QalcjCfuTwkSNzgi85vBM0mAQjJyBsQxPCuUpcZ2B0hP7xMebWq/TVqvTWqkRpll9vRbTHmQOHY4HTgGXACcAxwI+A8hR+cQx4F3gH2AS8jPB/YOd0NfJAEjoArASWmx29l/uDdqtAbBr2Nl66gB7AtXlGjcTY2tINLDW70O4ZBl5CeAF4CuG1A9DWXZhqQg8FLgIuB37aci00+m1gK/Ah8DGwDRg0BY0A40C9QChG6CHAfJCFpupF1kFB9Ye1+c6XRnZQfy+wSmCVwp3Aawr/AvkLsGWK2z8FhEquoguAG4CfFa6Eofc08CrCZiNz+z5+5YPigX69G5R7vLmQ4Ep+ApwMzLPrqXVW85HQOSflJtwGuWofAf5qnn6/se+EChWEW4HfASU7+x/gUeA54L2p+MG9YBTYgLJB2RUgjgpqBM4HVtiowdQ/bm5FrTOa7uhu4D7gfnMh+4x2fumbIdKN8EdrzK02hK8C+oCzgLXTROZEeE+FPwG/NfdwDbDe/OuAuQCM3CFgR8OdcIe5oZv3iRfDJB9UTABrpNGD1wKPA8flJjxsfutgQyDrQYSfAycCD9n/DZhC1WyHkRvO3WM+/jcHkFC5JKRnCDc1/I2EABE+uHk3j3YQQ+EN4GpT7b2WVQRiOwsZRfC3XwAh+P0bWCdw+NQRKszDycacRA3+UYKzv9Qi8/cVITCuBo6wgFSxIV/EIJJnHeeI149E9cr9J9QRVDmIckp4McJZSN57MwWhLVcAp1tGEoJXhynXWYYwaMcPCfrn/SF0ralynbg8MXo2P/v9GN3fFi8BiyEPtL1GbGbvcOZfvwS5XFQ3gDaD2i4HXLRWQkMkfMWi9moc5+12dc/SdSbheuAySwHnt5Aam6J/jPI6ykKZgI5iHroE8pu7EFaIk+dnNH3t8RiN4LXeSP3cCG5yF1zAkQibyj49RVQ/1BZamwpdamVYqCRORXh+hg7vyWCTVVs7W5SK8TWoyICovtiVxD2VpEZ3Ut9lDuV4HK/ntypnABsP3rZOG7ZYGR23J1UHVWSxIP8spxnl7GtzOB7NRV3KLqYj+R/lFFwKnR78zHaaRYS5TW/WmBuVN1X4td3SX5isoRmsvLDSwe1RllHyPreIyP/jgbUdf9u8tevvi45MSBJhaLjE2afXOHNZlfrId9vQ6UAmDqdKWf1uX/PinlGR1SBrQKMWUsN+onBbpH4dms+7Em371N35wFrYuKmTSmUOzinD28v4WzxnrvDIuzOMvSZU89KvHkV0pzF99SqtASafuRe51zs5G+TcQpCiUFnNF+WOkvpfhucjJ3DYD5Vjjvb0VDSsfrAlEgbmeUhn5pCXhvqoR2X6a+MMjI0gSj7cW2Eu4EYvsgLN52WHC1G/ZPO4y0F/JfCEk4kSqpkKIy6QuWB0J4uHttEd1+lME7qSeA8La0rdSf0thD+oSNSmvInzTlKuFtVpXVM6KBACTvCZi3Zu5/DRL0hdCe/9N/6aNvzsGhW5wqJ+sQRvJv6rnOqSWUdoUGdJPQtGh5mTJFSjUN1kk3jOfSbKI0oIUjnHxXE9aiXr8llHKKbS1Dki7+nM9k5mA1nojMdUuNFK9GrxlbZdNjsJba7gBTK9tl1fbwcv8ipImMZc3kJo8wVLZyWhmEqd93SgbaP7RM8Az6jk61DtsGDWEorJyqm3hdtJoJEh/Nfy1Y5mhC+gPKsJVSPUfau8MQx7PrFlkiHrl6Yj/mT2DnnblrzmSWRrlTQRnFAV5UlFrims/zdx16xWaOAwrD2WUj/pwBSIF/Q64C1bqg5rUp8Cvwde+AoR/GAYzVF3xQAAAABJRU5ErkJggg=="/>
 </svg>
