@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 class Membership(models.Model):
     
     name = models.CharField(max_length=255)
-    value = models.CharField(max_length=10)
+    value = models.CharField(max_length=10, help_text='Solo numeros')
     description = models.TextField(max_length=255)
     is_active = models.BooleanField("Activo", default=False)
 

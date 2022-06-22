@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import Customer, Appointment, Invoice
 import csv
 from django.http import HttpResponse
+from django.utils.html import format_html
 
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
@@ -22,11 +23,20 @@ class ExportCsvMixin:
 
     export_as_csv.short_description = "Exportar a CSV"
 
+
+
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ["customer", "contribution_date", 'added_by']
-    readonly_fields = ('contribution_date','added_by')
+    @admin.display(ordering='customer__value', description='Total')
+    def get_value(self, obj):
+        return obj.customer.value
+
+    list_display = ('customer', 'contribution_date', 'added_by', 'balance', 'status')
+    readonly_fields = ('get_value','contribution_date','added_by' )
     search_fields = ['customer__first_name', 'customer__person_id']
+
+    
+
 
     # Method that create user on field added_by
 
@@ -85,7 +95,8 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", 'status_membership', 'gener', 'is_collector']
     search_fields = ["phone", "email", "person_id"]
     list_display_links = ["first_name", "person_id"]
-    exclude = ["password","last_login"]
+    exclude = ('password','last_login')
+    readonly_fields = ('value',)
     list_filter = ["age", "is_active", "membership_id", "is_collector" ]
     list_per_page = 10
     actions = ["export_as_csv"]
@@ -114,6 +125,9 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         }),
     )
     
+    def creator_by(self, obj):
+        return format_html('<a href={}>URL</a>', obj.url)
+
     # Method that create user on field added_by
     def save_form(self, request, form, change):
         obj = super().save_form(request, form, change)

@@ -8,7 +8,7 @@ from users.models import NewUser
 from django.utils import timezone
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-
+import re
 
 PAY_CHOICES = [
         ('1', 'Contado'),
@@ -55,7 +55,7 @@ class Customer(AbstractBaseUser, models.Model):
     is_collector = models.BooleanField("Cobro RF.", default=False)
     way_to_pay = models.CharField("Tipo de pago", blank=True, null=True, max_length=255, choices=PAY_CHOICES)
     start_date = models.DateTimeField("Fecha de Suscripcion", null=True, blank=True, default=datetime.now())
-    value = models.FloatField("Valor", null=True, blank=True, max_length=10)
+    value = models.FloatField("Valor", null=True, blank=True, max_length=10, help_text='Solo numeros')
     password = models.CharField("Password", max_length=255)
     address_to_pay =  models.CharField("Direccion para cobrar", blank=True, null=True, max_length=255)
     
@@ -71,7 +71,7 @@ class Customer(AbstractBaseUser, models.Model):
     #Advance section
     email = models.EmailField(blank=True)
     birth_day = models.DateField('Fecha de nacimiento', blank=True, null=True)
-    age = models.PositiveIntegerField("Edad", null=True, default='')
+    age = models.IntegerField("Edad", null=True, default='')
     city = models.CharField("Ciudad", blank=True, max_length=20, default=' ')
     neigbord = models.CharField("Barrio", blank=True, max_length=20, default=' ')
     phone = models.CharField("Telefono", blank=True, max_length=20)
@@ -95,11 +95,19 @@ class Customer(AbstractBaseUser, models.Model):
         if self.person_id == "Sentir Humanos's App":
             return # Sentir shall never have him own App!
         else:
-            super().save(*args, **kwargs) 
+            # Save the memmership value in value field
+            mem_int = str(self.membership_id)
+            mem_int = re.findall('[0-9]+', mem_int)
+            if mem_int:
+                self.value = str(mem_int.pop())
+            else:
+                self.value = 0
+            super().save(*args, **kwargs)
+             
 
     def __str__(self):
         cadena="C.C: "+self.person_id+" - "+self.first_name
-        return cadena
+        return cadena+" - "+str(self.value)
 
 class Appointment(models.Model):
     
@@ -126,7 +134,7 @@ class Appointment(models.Model):
         return self.type_appointment
 
 class Invoice(models.Model):
-    customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
+    customer = models.ForeignKey(Customer, to_field='id', null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
     contribution_date = models.DateTimeField("Fecha de aporte", default=timezone.now)
     pay_method = models.CharField("Metodo de pago",choices=PAY_METHOD, default='DIGITADO', max_length=100)
     full_payment = models.FloatField('Total abono', null=True, blank=True)
@@ -134,6 +142,8 @@ class Invoice(models.Model):
     status = models.CharField('Estado admin', choices=STATUS, default='DIGITADO', max_length=100)
     notes = models.TextField("Notas", max_length=500, blank=True)
     added_by = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
+
+    
 
     class Meta:
         verbose_name = _("Recibos")
