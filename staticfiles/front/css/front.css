@@ -47,7 +47,10 @@ body{
   height: auto;
   background-image: none;
 }
-
+.id_full_payment {
+  background-color: #3CBC8D;
+  color: white;
+}
 .career-form .custom-select:focus {
   -webkit-box-shadow: none;
           box-shadow: none;
