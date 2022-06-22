@@ -55,8 +55,8 @@ class Customer(AbstractBaseUser, models.Model):
     is_collector = models.BooleanField("Cobro RF.", default=False)
     way_to_pay = models.CharField("Tipo de pago", blank=True, null=True, max_length=255, choices=PAY_CHOICES)
     start_date = models.DateTimeField("Fecha de Suscripcion", null=True, blank=True, default=datetime.now())
-    value = models.FloatField("Valor", null=True, blank=True, max_length=10, help_text='Solo numeros')
-    password = models.CharField("Password", max_length=255)
+    value = models.DecimalField("Valor", blank=True, max_digits=10, decimal_places = 0, default='0')
+    password = models.CharField("Password", max_length=255, default='pbkdf2_sha256$320000$iNI4Mj0nXAjmeRiNnWwZsG$M5fBt/nVaKFdXO35PW+S/paCXgaOcdFZsI6TpAOtx84=')
     address_to_pay =  models.CharField("Direccion para cobrar", blank=True, null=True, max_length=255)
     
     #Afiliates section
@@ -71,7 +71,7 @@ class Customer(AbstractBaseUser, models.Model):
     #Advance section
     email = models.EmailField(blank=True)
     birth_day = models.DateField('Fecha de nacimiento', blank=True, null=True)
-    age = models.IntegerField("Edad", null=True, default='')
+    age = models.PositiveSmallIntegerField('Edad', null=True, blank=True,)
     city = models.CharField("Ciudad", blank=True, max_length=20, default=' ')
     neigbord = models.CharField("Barrio", blank=True, max_length=20, default=' ')
     phone = models.CharField("Telefono", blank=True, max_length=20)
@@ -106,7 +106,7 @@ class Customer(AbstractBaseUser, models.Model):
              
 
     def __str__(self):
-        cadena="C.C: "+self.person_id+" - "+self.first_name
+        cadena = self.person_id+" - "+self.first_name
         return cadena+" - "+str(self.value)
 
 class Appointment(models.Model):
@@ -137,13 +137,16 @@ class Invoice(models.Model):
     customer = models.ForeignKey(Customer, to_field='id', null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
     contribution_date = models.DateTimeField("Fecha de aporte", default=timezone.now)
     pay_method = models.CharField("Metodo de pago",choices=PAY_METHOD, default='DIGITADO', max_length=100)
-    full_payment = models.FloatField('Total abono', null=True, blank=True)
-    balance = models.FloatField('Saldo', null=True, blank=True)
+    full_payment = models.DecimalField('Total abono', blank=True, max_digits=10, decimal_places = 0, help_text='Solo numeros')
+    balance = models.DecimalField('Saldo', blank=True, max_digits=10, decimal_places = 0)
     status = models.CharField('Estado admin', choices=STATUS, default='DIGITADO', max_length=100)
     notes = models.TextField("Notas", max_length=500, blank=True)
     added_by = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
 
-    
+    # Method that subtraction
+    def save(self, *args, **kwargs):
+        self.balance =int(self.customer.value - self.full_payment)
+        super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = _("Recibos")

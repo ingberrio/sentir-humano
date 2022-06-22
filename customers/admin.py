@@ -27,16 +27,18 @@ class ExportCsvMixin:
 
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
+    
+
+    list_display = ('customer', 'contribution_date', 'added_by', 'balance', 'status')
+    readonly_fields = ('get_value','contribution_date','added_by', 'balance' )
+    fields = ('contribution_date', 'customer', 'pay_method', 'full_payment', 'balance', 'status', 'added_by', 'notes')
+    search_fields = ['customer__first_name', 'customer__person_id']
+
+    # Method that show the field value of costumer on innvoice
+    
     @admin.display(ordering='customer__value', description='Total')
     def get_value(self, obj):
         return obj.customer.value
-
-    list_display = ('customer', 'contribution_date', 'added_by', 'balance', 'status')
-    readonly_fields = ('get_value','contribution_date','added_by' )
-    search_fields = ['customer__first_name', 'customer__person_id']
-
-    
-
 
     # Method that create user on field added_by
 
