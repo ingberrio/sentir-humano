@@ -22,6 +22,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='customer',
+            name='address_to_pay',
+            field=models.CharField(blank=True, max_length=255, null=True, verbose_name='Direccion para cobrar'),
+        ),
+        migrations.AddField(
+            model_name='customer',
             name='affiliate_five_customer',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='five', to='customers.customer', verbose_name='Afiliado Cinco'),
         ),
