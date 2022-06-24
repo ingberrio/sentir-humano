@@ -4,6 +4,7 @@ from .models import Customer, Appointment, Invoice
 import csv
 from django.http import HttpResponse
 from django.utils.html import format_html
+from simple_history.admin import SimpleHistoryAdmin
 
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
@@ -26,7 +27,7 @@ class ExportCsvMixin:
 
 
 @admin.register(Invoice)
-class InvoiceAdmin(admin.ModelAdmin):
+class InvoiceAdmin(SimpleHistoryAdmin):
     
 
     list_display = ('customer', 'contribution_date', 'added_by', 'balance', 'status')
@@ -60,7 +61,7 @@ class InvoiceAdmin(admin.ModelAdmin):
         return filtered_query
 
 @admin.register(Appointment)
-class AppointmentAdmin(admin.ModelAdmin):
+class AppointmentAdmin(SimpleHistoryAdmin):
     
     list_editable = ['is_confirm', 'is_cancel']
     list_display = ["customer", "type_appointment",  "added_by", 'service',  "is_confirm", "is_cancel"]
@@ -92,7 +93,7 @@ class AppointmentAdmin(admin.ModelAdmin):
     
         
 @admin.register(Customer)
-class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
+class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
     
     list_editable = ["is_active"]
     list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", "collector", "status_membership", "gener", "is_collector"]

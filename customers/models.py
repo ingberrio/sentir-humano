@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 import re
+from simple_history.models import HistoricalRecords
 
 PAY_CHOICES = [
         ('1', 'Contado'),
@@ -94,7 +95,7 @@ class Customer(AbstractBaseUser, models.Model):
     is_main = models.BooleanField("Titular", default=False)
     status_membership = models.CharField('Estado', choices=STATUS_MEMBERSHIP, default='DIGITADO', max_length=100)
     gener = models.CharField('Genero', choices=GENER, blank=True, default= ' ', max_length=100)
-    
+    history = HistoricalRecords()
     class Meta:
         verbose_name = _("Clientes")
         verbose_name_plural = _("Clientes")
@@ -144,7 +145,7 @@ class Appointment(models.Model):
     about = models.TextField("Observaciones", max_length=500, blank=True)
     is_confirm = models.BooleanField("Confirmada", default=False)
     is_cancel = models.BooleanField("Cancelada", default=False)
-
+    history = HistoricalRecords()
     class Meta:
         verbose_name = _("Citas")
         verbose_name_plural = _("Citas")
@@ -161,7 +162,7 @@ class Invoice(models.Model):
     status = models.CharField('Estado admin', choices=STATUS, default='DIGITADO', max_length=100)
     notes = models.TextField("Notas", max_length=500, blank=True)
     added_by = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
-
+    history = HistoricalRecords()
     # Method that subtraction
     def save(self, *args, **kwargs):
         self.balance =int(self.customer.value - self.full_payment)
@@ -170,3 +171,6 @@ class Invoice(models.Model):
     class Meta:
         verbose_name = _("Recibos")
         verbose_name_plural = _("Recibos")
+
+    def __str__(self):
+        return str(self.customer)
