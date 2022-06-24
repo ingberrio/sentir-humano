@@ -2,8 +2,9 @@ from datetime import datetime
 from django.contrib.admin.widgets import AdminDateWidget
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from sqlalchemy import true
 from memberships.models import Membership
-from suppliers.models import Supplier
+from suppliers.models import Service
 from users.models import NewUser
 from django.utils import timezone
 from django.conf import settings
@@ -32,6 +33,13 @@ PAY_METHOD = [
         ('OTRO', 'OTRO')
 ]
 
+CITY =[
+    ('ARMENIA', 'ARMENIA'),
+    ('CARTAGO', 'CARTAGO'),
+    ('QUIMBAYA', 'QUIMBAYA'),
+    ('PEREIRA', 'PEREIRA')
+]
+
 STATUS_MEMBERSHIP =[
     ('COBRO', 'COBRO'),
     ('PAGO', 'PAGO'),
@@ -55,10 +63,10 @@ class Customer(AbstractBaseUser, models.Model):
     is_collector = models.BooleanField("Cobro RF.", default=False)
     way_to_pay = models.CharField("Tipo de pago", blank=True, null=True, max_length=255, choices=PAY_CHOICES)
     start_date = models.DateTimeField("Fecha de Suscripcion", null=True, blank=True, default=datetime.now())
-    value = models.DecimalField("Valor", blank=True, max_digits=10, decimal_places = 0, default='0')
+    value = models.DecimalField("Valor a pagar =", blank=True, max_digits=10, decimal_places = 0, default='0')
     password = models.CharField("Password", max_length=255, default='pbkdf2_sha256$320000$iNI4Mj0nXAjmeRiNnWwZsG$M5fBt/nVaKFdXO35PW+S/paCXgaOcdFZsI6TpAOtx84=')
     address_to_pay =  models.CharField("Direccion para cobrar", blank=True, null=True, max_length=255)
-    
+    payment_descount = models.DecimalField('Descuento', blank=True, max_digits=10, decimal_places = 0, help_text='Solo numeros', default=0)
     #Afiliates section
     affiliate_one_customer = models.ForeignKey("self", related_name='one', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Afiliado Uno')
     affiliate_two_customer = models.ForeignKey("self", related_name='two', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Afiliado Dos')
@@ -72,9 +80,11 @@ class Customer(AbstractBaseUser, models.Model):
     email = models.EmailField(blank=True)
     birth_day = models.DateField('Fecha de nacimiento', blank=True, null=True)
     age = models.PositiveSmallIntegerField('Edad', null=True, blank=True,)
-    city = models.CharField("Ciudad", blank=True, max_length=20, default=' ')
+    city = models.CharField("Ciudad", choices=CITY, blank=True, max_length=20, default=' ')
+    city_pay = models.CharField("Ciudad cobro", choices=CITY, blank=True, max_length=20, default=' ')
     neigbord = models.CharField("Barrio", blank=True, max_length=20, default=' ')
-    phone = models.CharField("Telefono", blank=True, max_length=20)
+    phone = models.CharField("Telefono", max_length=20)
+    phone_contact = models.CharField("Telefono Opcional", blank=True, max_length=20)
     address =  models.CharField("Dirección", blank=True, null=True, max_length=255)
     creator_by = models.ForeignKey(NewUser, related_name='created_by', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Creado por')
     description = models.TextField("Notas", blank=True, null=True)
@@ -91,6 +101,9 @@ class Customer(AbstractBaseUser, models.Model):
     
     USERNAME_FIELD = 'email'
 
+    
+    # Method that subtraction to show in field value
+    
     def save(self, *args, **kwargs):
         if self.person_id == "Sentir Humanos's App":
             return # Sentir shall never have him own App!
@@ -99,27 +112,33 @@ class Customer(AbstractBaseUser, models.Model):
             mem_int = str(self.membership_id)
             mem_int = re.findall('[0-9]+', mem_int)
             if mem_int:
-                self.value = str(mem_int.pop())
+                self.value = int(mem_int.pop()) - self.payment_descount
             else:
                 self.value = 0
             super().save(*args, **kwargs)
              
 
     def __str__(self):
-        cadena = self.person_id+" - "+self.first_name
-        return cadena+" - "+str(self.value)
+        titular = self.is_main
+        if titular == True:
+            titular = 'Titular'
+        else:
+            titular = 'Afliado'
+        cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
+        return cadena
 
 class Appointment(models.Model):
     
     APPOIMENT_CHOICES = [
-        ('1', 'Tipo 1'),
-        ('2', 'Tipo 2'),
-        ('3', 'Tipo 3'),
+        ('AFILIACION', 'AFILIACION'),
+        ('CITA', 'CITA'),
+        ('INFORMACION', 'INFORMACION'),
+        ('OTROS', 'OTROS')
     ]
     start_date = models.DateTimeField("Inicio solicitud", default=timezone.now)
-    type_appointment = models.CharField("Tipo de cita", max_length=255, choices=APPOIMENT_CHOICES)
+    type_appointment = models.CharField("Tipo de cita", max_length=255, choices=APPOIMENT_CHOICES, default='CITA')
     customer = models.ForeignKey(Customer, null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
-    supplier = models.ForeignKey(Supplier, null=True, on_delete=models.SET_NULL, verbose_name='Especialidad')
+    service = models.ForeignKey(Service, null=True, on_delete=models.SET_NULL, verbose_name='Especialidad')
     end_date = models.DateTimeField("Fecha cita", null=True, blank=True)
     added_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
     about = models.TextField("Observaciones", max_length=500, blank=True)

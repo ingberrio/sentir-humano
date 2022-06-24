@@ -33,6 +33,7 @@ class InvoiceAdmin(admin.ModelAdmin):
     readonly_fields = ('get_value','contribution_date','added_by', 'balance' )
     fields = ('contribution_date', 'customer', 'pay_method', 'full_payment', 'balance', 'status', 'added_by', 'notes')
     search_fields = ['customer__first_name', 'customer__person_id']
+    list_filter = ('balance','contribution_date')
 
     # Method that show the field value of costumer on innvoice
     
@@ -62,11 +63,11 @@ class InvoiceAdmin(admin.ModelAdmin):
 class AppointmentAdmin(admin.ModelAdmin):
     
     list_editable = ['is_confirm', 'is_cancel']
-    list_display = ["customer", "type_appointment",  "added_by", 'supplier',  "is_confirm", "is_cancel"]
-    fields = ('start_date', 'added_by', 'customer', 'type_appointment', 'supplier','end_date', 'about', 'is_confirm', 'is_cancel')
+    list_display = ["customer", "type_appointment",  "added_by", 'service',  "is_confirm", "is_cancel"]
+    fields = ('start_date', 'added_by', 'customer', 'type_appointment', 'service','end_date', 'about', 'is_confirm', 'is_cancel')
     search_fields = ['customer__first_name', 'customer__person_id']
     readonly_fields = ('start_date','added_by')
-    list_filter = ["start_date", "supplier", "added_by" ]
+    list_filter = ["start_date", "service", "added_by" ]
     exclude = ["password"]
     list_per_page = 10
     actions = ["generate_bill"]
@@ -94,24 +95,24 @@ class AppointmentAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
     
     list_editable = ["is_active"]
-    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", 'status_membership', 'gener', 'is_collector']
-    search_fields = ["phone", "email", "person_id"]
+    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", "collector", "status_membership", "gener", "is_collector"]
+    search_fields = ["phone", "email", "person_id", "first_name", "last_name"]
     list_display_links = ["first_name", "person_id"]
     exclude = ('password','last_login')
-    readonly_fields = ('value',)
-    list_filter = ["age", "is_active", "membership_id", "is_collector" ]
+    readonly_fields = ('value', 'start_date')
+    list_filter = ["age", "is_active", "membership_id", "is_collector", 'status_membership']
     list_per_page = 10
     actions = ["export_as_csv"]
           
     fieldsets = (
         (None, {
-            'fields': ('start_date','first_name','last_name','person_id', 'age','status_membership', 'phone', 
+            'fields': ('start_date','first_name','last_name','person_id', 'age','status_membership', 'phone', 'phone_contact',  
             'asesor_id', 'endsAt', 'description', 'is_active', 'is_main')
             
         }),
         ('Cobro',{
             'classes': ('collapse',),
-            'fields': ([ 'creator_by','membership_id', 'way_to_pay','value', 'collector','is_collector','createdAt', 'address_to_pay']),
+            'fields': ([ 'creator_by','membership_id','payment_descount', 'value', 'way_to_pay', 'collector','is_collector','createdAt','city_pay', 'address_to_pay']),
         }),
         ('Opciones avanzadas', {
             'classes': ('collapse',),
@@ -136,6 +137,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         if not change:
             obj.creator_by = request.user
             obj.collector = request.user
+            obj.asesor_id = request.user
         return obj
     
     # showing current user accounts appoiments
@@ -152,7 +154,7 @@ class UserAdmin(admin.ModelAdmin, ExportCsvMixin):
         if request.user.is_superuser:
             return super(UserAdmin, self).get_readonly_fields(request, obj)
         else:
-            return ('collector', 'status_membership', 'creator_by')
+            return ('collector', 'status_membership', 'creator_by', 'start_date', 'asesor_id')
 
     
     

@@ -47,9 +47,10 @@ body{
   height: auto;
   background-image: none;
 }
-.id_full_payment {
+.field-value {
+  border-radius: 5px;
+  padding: 1px 20px 3px 10px;
   background-color: #3CBC8D;
-  color: white;
 }
 .career-form .custom-select:focus {
   -webkit-box-shadow: none;
