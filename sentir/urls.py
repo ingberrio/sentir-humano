@@ -17,14 +17,17 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from home import views as home_views
+from customers.views import InvoicePdfView
 from django.conf.urls.static import static
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_views.home, name='home'),
-    path('about/', home_views.about, name='about')
+    path('about/', home_views.about, name='about'),
+    path('admin/customers/invoice/<int:pk>/generatePDF/', InvoicePdfView.as_view(), name='generatePDF')
 ]
+
 
 
 admin.site.site_header = 'SentirHumano admin'

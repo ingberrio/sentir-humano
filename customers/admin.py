@@ -1,10 +1,14 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.conf.urls import url
+from django.urls import path
+from home import views
 from .models import Customer, Appointment, Invoice
 import csv
 from django.http import HttpResponse
 from django.utils.html import format_html
 from simple_history.admin import SimpleHistoryAdmin
+from customers.views import InvoicePdfView
 
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
@@ -29,13 +33,26 @@ class ExportCsvMixin:
 @admin.register(Invoice)
 class InvoiceAdmin(SimpleHistoryAdmin):
     
-
-    list_display = ('customer', 'contribution_date', 'added_by', 'balance', 'status')
+    list_display = ('customer', 'contribution_date', 'added_by', 'balance', 'status', 'generatePDF' )
     readonly_fields = ('get_value','contribution_date','added_by', 'balance' )
     fields = ('contribution_date', 'customer', 'pay_method', 'full_payment', 'balance', 'status', 'added_by', 'notes')
     search_fields = ['customer__first_name', 'customer__person_id']
     list_filter = ('balance','contribution_date')
-
+    
+    
+    def get_urls(self):
+        urls = super(InvoiceAdmin, self).get_urls()
+        custom_urls = [
+            path('<int:pk>/generatePDF/',  InvoicePdfView.as_view() )
+        ]
+        return custom_urls + urls
+    
+    def generatePDF(self, obj):
+        return format_html(
+            "<a href='{}/generatePDF' class='btn btn-outline-danger float-right' >Exportat PDF</a>",
+            (obj.pk),
+        )
+        
     # Method that show the field value of costumer on innvoice
     
     @admin.display(ordering='customer__value', description='Total')

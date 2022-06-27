@@ -2,6 +2,7 @@ from datetime import datetime
 from django.contrib.admin.widgets import AdminDateWidget
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.urls import reverse_lazy
 from sqlalchemy import true
 from memberships.models import Membership
 from suppliers.models import Service
@@ -163,6 +164,7 @@ class Invoice(models.Model):
     notes = models.TextField("Notas", max_length=500, blank=True)
     added_by = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
     history = HistoricalRecords()
+    
     # Method that subtraction
     def save(self, *args, **kwargs):
         self.balance =int(self.customer.value - self.full_payment)
