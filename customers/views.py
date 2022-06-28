@@ -58,4 +58,4 @@ class InvoicePdfView(View):
         except:
             pass
         
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect(reverse_lazy('home'))
