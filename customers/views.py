@@ -39,7 +39,7 @@ class InvoicePdfView(View):
         return path
 
     def get(self, request, *args, **kwargs):
-        response = None
+        response = ''
         response = HttpResponse(content_type='application/pdf')
         #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
@@ -59,4 +59,4 @@ class InvoicePdfView(View):
             return response
         except:
             pass
-        return response
+        return HttpResponse(template) 
