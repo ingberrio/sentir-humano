@@ -57,4 +57,4 @@ class InvoicePdfView(View):
         except:
             pass
         
-        return HttpResponseRedirect(reverse('generatePDF', kwargs={ "id": str(self.id) }))
+        return HttpResponseRedirect(reverse('generatePDF', kwargs={ "pk": str(self.id) }))
