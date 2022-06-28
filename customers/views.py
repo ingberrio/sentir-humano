@@ -4,9 +4,8 @@ import os
 from django.template.loader import get_template
 from customers.models import Invoice
 from xhtml2pdf import pisa
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
-from . import views
 
 
 class InvoicePdfView(View):
@@ -55,7 +54,7 @@ class InvoicePdfView(View):
             if pisaStatus.err:
                 return HttpResponse('Tenemos un error <pre>' + html + '</pre>')
             return response
-        except:
-            pass
+        except Http404:
+            HttpResponseRedirect('/')
         
-        return HttpResponseRedirect('/admin/customers/invoice/')
+        return response

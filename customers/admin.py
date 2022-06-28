@@ -50,7 +50,7 @@ class InvoiceAdmin(SimpleHistoryAdmin):
     def generatePDF(self, obj):
         return format_html(
             "<a href='{}/generatePDF' class='btn btn-outline-danger float-right' >Exportat PDF</a>",
-            (obj.pk),
+            (obj.id),
         )
     
     # Method that show the field value of costumer on innvoice
