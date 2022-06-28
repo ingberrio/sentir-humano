@@ -4,7 +4,7 @@ import os
 from django.template.loader import get_template
 from customers.models import Invoice
 from xhtml2pdf import pisa
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 
 
@@ -46,7 +46,7 @@ class InvoicePdfView(View):
             }
             html = template.render(context)
             response = HttpResponse(content_type='application/pdf')
-            #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
+            response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
             pisaStatus = pisa.CreatePDF(
                 html, dest=response,
                 link_callback=self.link_callback
@@ -54,7 +54,7 @@ class InvoicePdfView(View):
             if pisaStatus.err:
                 return HttpResponse('Tenemos un error <pre>' + html + '</pre>')
             return response
-        except Http404:
-            HttpResponseRedirect('/')
+        except:
+            pass
         
-        return response
+        return HttpResponseRedirect(reverse('generatePDF', kwargs={ "id": str(self.id) }))
