@@ -7,6 +7,7 @@ from customers.models import Invoice
 from xhtml2pdf import pisa
 from django.http import Http404, HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse, reverse_lazy
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class InvoicePdfView(View):
@@ -39,7 +40,7 @@ class InvoicePdfView(View):
 
     def get(self, request, *args, **kwargs):
         response = HttpResponse(content_type='application/pdf')
-        
+        #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
             template = get_template('admin/invoice.html')
             context = {
@@ -55,7 +56,7 @@ class InvoicePdfView(View):
             if pisaStatus.err:
                 return HttpResponse('Tenemos un error <pre>' + html + '</pre>')
             return response
-        except:
+        except ObjectDoesNotExist:
             pass
         
         return response
