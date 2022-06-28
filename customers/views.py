@@ -7,9 +7,8 @@ from customers.models import Invoice
 from xhtml2pdf import pisa
 from django.http import Http404, HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse, reverse_lazy
-from django.contrib.staticfiles import finders
 
-response = HttpResponse(content_type='application/pdf')
+
 class InvoicePdfView(View):
 
     def link_callback(self, uri, rel):
@@ -18,24 +17,18 @@ class InvoicePdfView(View):
         resources
         """
         # use short variable names
-        result = finders.find(uri)
-        if result:
-                if not isinstance(result, (list, tuple)):
-                        result = [result]
-                result = list(os.path.realpath(path) for path in result)
-                path=result[0]
-        else:
-                sUrl = settings.STATIC_URL        # Typically /static/
-                sRoot = settings.STATIC_ROOT      # Typically /home/userX/project_static/
-                mUrl = settings.MEDIA_URL         # Typically /media/
-                mRoot = settings.MEDIA_ROOT       # Typically /home/userX/project_static/media/
+        sUrl = settings.STATIC_URL  # Typically /static/
+        sRoot = settings.STATIC_ROOT  # Typically /home/userX/project_static/
+        mUrl = settings.MEDIA_URL  # Typically /static/media/
+        mRoot = settings.MEDIA_ROOT  # Typically /home/userX/project_static/media/
 
-                if uri.startswith(mUrl):
-                        path = os.path.join(mRoot, uri.replace(mUrl, ""))
-                elif uri.startswith(sUrl):
-                        path = os.path.join(sRoot, uri.replace(sUrl, ""))
-                else:
-                        return uri# handle absolute uri (ie: http://some.tld/foo.png)
+        # convert URIs to absolute system paths
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        else:
+            return uri  # handle absolute uri (ie: http://some.tld/foo.png)
 
         # make sure that file exists
         if not os.path.isfile(path):
@@ -45,6 +38,7 @@ class InvoicePdfView(View):
         return path
 
     def get(self, request, *args, **kwargs):
+        response = HttpResponse(content_type='application/pdf')
         try:
             template = get_template('admin/invoice.html')
             context = {
@@ -53,7 +47,7 @@ class InvoicePdfView(View):
                 'icon': '{}{}'.format(settings.MEDIA_URL, 'logo.png')
             }
             html = template.render(context)
-            
+            response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
             pisaStatus = pisa.CreatePDF(
                 html, dest=response,
