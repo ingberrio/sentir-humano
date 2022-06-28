@@ -59,4 +59,4 @@ class InvoicePdfView(View):
             return response
         except:
             pass
-        return HttpResponseRedirect(reverse_lazy('admin:invoice'))
+        return HttpResponseRedirect(reverse_lazy('generatePDF'))

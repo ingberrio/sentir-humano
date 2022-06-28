@@ -43,13 +43,13 @@ class InvoiceAdmin(SimpleHistoryAdmin):
     def get_urls(self):
         urls = super(InvoiceAdmin, self).get_urls()
         custom_urls = [
-            path('<int:pk>/generatePDF',  InvoicePdfView.as_view(), name='generatePDF' )
+            path('generatePDF/<int:pk>',  InvoicePdfView.as_view(), name='generatePDF' )
         ]
         return custom_urls + urls
     
     def generatePDF(self, obj):
         return format_html(
-            "<a href='{}/generatePDF' class='btn btn-outline-danger float-right' >Exportat PDF</a>",
+            "<a href='generatePDF/{}' class='btn btn-outline-danger float-right' >Exportat PDF</a>",
             (obj.id),
         )
         

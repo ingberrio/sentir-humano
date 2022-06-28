@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_views.home, name='home'),
     path('about/', home_views.about, name='about'),
-    path('<int:pk>/generatePDF/', InvoicePdfView.as_view(), name='generatePDF')
+    path('generatePDF/<int:pk>/', InvoicePdfView.as_view(), name='generatePDF')
 ]
 
 
