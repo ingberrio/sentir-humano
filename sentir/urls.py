@@ -20,12 +20,9 @@ from home import views as home_views
 from customers.views import InvoicePdfView
 from django.conf.urls.static import static
 
-import sentir
-
-app_name = 'sentir'
-
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('customers.urls')),
     path('', home_views.home, name='home'),
     path('about/', home_views.about, name='about'),
     path('generatePDF/<int:pk>/', InvoicePdfView.as_view(), name='generatePDF')
