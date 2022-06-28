@@ -59,4 +59,4 @@ class InvoicePdfView(View):
         except:
             pass
         
-        return redirect ('(?P<pk>[0-9]+)/generatePDF/\\Z')
+        return redirect('admin/customers/invoice/')
