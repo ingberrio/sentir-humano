@@ -52,7 +52,7 @@ class InvoiceAdmin(SimpleHistoryAdmin):
             "<a href='{}/generatePDF' class='btn btn-outline-danger float-right' >Exportat PDF</a>",
             (obj.pk),
         )
-        
+    
     # Method that show the field value of costumer on innvoice
     
     @admin.display(ordering='customer__value', description='Total')

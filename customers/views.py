@@ -1,13 +1,12 @@
-from django.shortcuts import render
-from django.views.generic import CreateView, ListView, DeleteView, UpdateView, View
+from django.views.generic import View
 from django.conf import settings
 import os
 from django.template.loader import get_template
 from customers.models import Invoice
 from xhtml2pdf import pisa
-from django.http import HttpResponse
-from django.http import JsonResponse, HttpResponseRedirect
-from django.urls import reverse_lazy
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from . import views
 
 
 class InvoicePdfView(View):
@@ -58,4 +57,5 @@ class InvoicePdfView(View):
             return response
         except:
             pass
-        return HttpResponseRedirect(reverse_lazy('admin:invoice'))
+        
+        return HttpResponseRedirect('/admin/customers/invoice/')
