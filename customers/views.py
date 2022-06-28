@@ -39,6 +39,7 @@ class InvoicePdfView(View):
         return path
 
     def get(self, request, *args, **kwargs):
+        response = None
         response = HttpResponse(content_type='application/pdf')
         #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
@@ -56,7 +57,6 @@ class InvoicePdfView(View):
             if pisaStatus.err:
                 return HttpResponse('Tenemos un error <pre>' + html + '</pre>')
             return response
-        except ObjectDoesNotExist:
+        except:
             pass
-        
         return response
