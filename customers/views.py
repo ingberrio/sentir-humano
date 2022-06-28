@@ -39,6 +39,7 @@ class InvoicePdfView(View):
 
     def get(self, request, *args, **kwargs):
         response = HttpResponse(content_type='application/pdf')
+        
         try:
             template = get_template('admin/invoice.html')
             context = {
@@ -47,8 +48,6 @@ class InvoicePdfView(View):
                 'icon': '{}{}'.format(settings.MEDIA_URL, 'logo.png')
             }
             html = template.render(context)
-            
-            response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
             pisaStatus = pisa.CreatePDF(
                 html, dest=response,
                 link_callback=self.link_callback
