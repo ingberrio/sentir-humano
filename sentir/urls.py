@@ -20,12 +20,13 @@ from home import views as home_views
 from customers.views import InvoicePdfView
 from django.conf.urls.static import static
 
+app_name = 'customers'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home_views.home, name='home'),
     path('about/', home_views.about, name='about'),
-    path('admin/customers/invoice/<int:pk>/generatePDF/', InvoicePdfView.as_view(), name='generatePDF')
+    path('<int:pk>/generatePDF/', InvoicePdfView.as_view(), name='generatePDF')
 ]
 
 

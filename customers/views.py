@@ -2,10 +2,12 @@ from django.views.generic import View
 from django.conf import settings
 import os
 from django.template.loader import get_template
+import customers
 from customers.models import Invoice
 from xhtml2pdf import pisa
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.shortcuts import redirect
 
 
 class InvoicePdfView(View):
@@ -57,4 +59,4 @@ class InvoicePdfView(View):
         except:
             pass
         
-        return HttpResponseRedirect(reverse('generatePDF', kwargs={ "pk": str(self.id) }))
+        return redirect ('(?P<pk>[0-9]+)/generatePDF/\\Z')
