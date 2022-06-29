@@ -25,8 +25,6 @@ urlpatterns = [
     path('', include('customers.urls')),
     path('', home_views.home, name='home'),
     path('about/', home_views.about, name='about'),
-    path('generatePDF/<int:pk>/', InvoicePdfView.as_view(), name='generatePDF'),
-    path('credentialPDF/<int:pk>/', CustomerPdfView.as_view(), name='credentialPDF')
 ]
 
 
