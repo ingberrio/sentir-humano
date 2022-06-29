@@ -96,7 +96,7 @@ class Customer(AbstractBaseUser, models.Model):
     is_main = models.BooleanField("Titular", default=False)
     status_membership = models.CharField('Estado', choices=STATUS_MEMBERSHIP, default='DIGITADO', max_length=100)
     gener = models.CharField('Genero', choices=GENER, blank=True, default= ' ', max_length=100)
-    history = HistoricalRecords()
+    history = HistoricalRecords(custom_model_name='Historia')
     class Meta:
         verbose_name = _("Clientes")
         verbose_name_plural = _("Clientes")

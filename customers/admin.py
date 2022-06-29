@@ -8,7 +8,7 @@ import csv
 from django.http import HttpResponse
 from django.utils.html import format_html
 from simple_history.admin import SimpleHistoryAdmin
-from customers.views import InvoicePdfView
+from customers.views import InvoicePdfView, CustomerPdfView
 
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
@@ -52,7 +52,8 @@ class InvoiceAdmin(SimpleHistoryAdmin):
             "<a href='generatePDF/{}' class='btn btn-outline-danger float-right' >Exportat PDF</a>",
             (obj.id),
         )
-        
+    
+
     # Method that show the field value of costumer on innvoice
     
     @admin.display(ordering='customer__value', description='Total')
@@ -113,7 +114,7 @@ class AppointmentAdmin(SimpleHistoryAdmin):
 class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
     
     list_editable = ["is_active"]
-    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", "collector", "status_membership", "gener", "is_collector"]
+    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", "collector", "status_membership", "gener", "is_collector", 'credentialPDF']
     search_fields = ["phone", "email", "person_id", "first_name", "last_name"]
     list_display_links = ["first_name", "person_id"]
     exclude = ('password','last_login')
@@ -121,6 +122,19 @@ class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
     list_filter = ["age", "is_active", "membership_id", "is_collector", 'status_membership']
     list_per_page = 10
     actions = ["export_as_csv"]
+
+    def get_urls(self):
+        urls = super(UserAdmin, self).get_urls()
+        custom_urls = [
+            path('credentialPDF/<int:pk>',  CustomerPdfView.as_view(), name='credentialPDF' )
+        ]
+        return custom_urls + urls
+    
+    def credentialPDF(self, obj):
+        return format_html(
+            "<a href='credentialPDF/{}' class='btn btn-outline-danger float-right' >Generar Carnet</a>",
+            (obj.id),
+        )
           
     fieldsets = (
         (None, {
@@ -145,7 +159,7 @@ class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
             ]),
         }),
     )
-    
+
     def creator_by(self, obj):
         return format_html('<a href={}>URL</a>', obj.url)
 

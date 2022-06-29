@@ -17,7 +17,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include
 from home import views as home_views
-from customers.views import InvoicePdfView
+from customers.views import InvoicePdfView, CustomerPdfView
 from django.conf.urls.static import static
 
 urlpatterns = [
@@ -25,7 +25,8 @@ urlpatterns = [
     path('', include('customers.urls')),
     path('', home_views.home, name='home'),
     path('about/', home_views.about, name='about'),
-    path('generatePDF/<int:pk>/', InvoicePdfView.as_view(), name='generatePDF')
+    path('generatePDF/<int:pk>/', InvoicePdfView.as_view(), name='generatePDF'),
+    path('credentialPDF/<int:pk>/', CustomerPdfView.as_view(), name='credentialPDF')
 ]
 
 
