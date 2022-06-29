@@ -57,7 +57,7 @@ class InvoicePdfView(View):
             return response
         except:
             pass
-        return response 
+        return HttpResponseRedirect(reverse('customer:generatePDF')) 
 
 class CustomerPdfView(View):
 
@@ -108,6 +108,7 @@ class CustomerPdfView(View):
             return response
         except:
             pass
-        return response 
+        return HttpResponseRedirect(reverse('customer:credentialPDF')) 
+
 
 
