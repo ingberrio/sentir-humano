@@ -158,7 +158,7 @@ class Invoice(models.Model):
     customer = models.ForeignKey(Customer, to_field='id', null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
     contribution_date = models.DateTimeField("Fecha de aporte", default=timezone.now)
     pay_method = models.CharField("Metodo de pago",choices=PAY_METHOD, default='DIGITADO', max_length=100)
-    full_payment = models.DecimalField('Total abono', blank=True, max_digits=10, decimal_places = 0, help_text='Solo numeros')
+    full_payment = models.DecimalField('Total abono', blank=True, max_digits=10, decimal_places = 0, help_text='Solo numeros', default=0)
     balance = models.DecimalField('Saldo', blank=True, max_digits=10, decimal_places = 0)
     status = models.CharField('Estado admin', choices=STATUS, default='DIGITADO', max_length=100)
     notes = models.TextField("Notas", max_length=500, blank=True)
