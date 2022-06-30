@@ -7,10 +7,7 @@ SECRET_KEY = config('SECRET_KEY')
 
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    'https://sentir-humano-production.herokuapp.com/',
-    'https://sentir-s3-bucket.s3.amazonaws.com/'
-    ]
+ALLOWED_HOSTS = ['*']
 
 
 # Amazon S3 Settings
