@@ -1,6 +1,5 @@
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
-from django.conf.urls import url
 from django.urls import path
 from home import views
 from .models import Customer, Appointment, Invoice
@@ -132,7 +131,7 @@ class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
     
     def credentialPDF(self, obj):
         return format_html(
-            "<a href='credentialPDF/{}' class='btn btn-outline-danger float-right' >Generar Carnet</a>",
+            "<a href='credentialPDF/{}' class='btn btn-outline-danger'  >Generar Carnet</a>",
             (obj.id),
         )
           

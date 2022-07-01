@@ -52,6 +52,18 @@ body{
   padding: 1px 20px 3px 10px;
   background-color: #3CBC8D;
 }
+.front{
+  background: url('/static/front/img/credential_front.png');  background-size:450px 240px;
+}
+.test {
+  width:400px;
+  height:200px;
+  background: url('{%  static "front/img/credential.png" %}');
+  background-repeat:no-repeat;
+  background-size:450px 240px;
+  border: 1px solid black;
+  padding: 20px;
+}
 .career-form .custom-select:focus {
   -webkit-box-shadow: none;
           box-shadow: none;
