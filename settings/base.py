@@ -131,7 +131,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.AllowAllUsersModelBackend',
 )
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
-APPEND_SLASH = False
+APPEND_SLASH = True
 
 
 # Default primary key field type

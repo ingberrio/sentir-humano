@@ -2,11 +2,10 @@ from django.views.generic import View
 from django.conf import settings
 import os
 from django.template.loader import get_template
-import customers
 from customers.models import Invoice, Customer
 from xhtml2pdf import pisa
 from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 
 class InvoicePdfView(View):
 
@@ -95,8 +94,6 @@ class CustomerPdfView(View):
             template = get_template('admin/credential.html')
             context = {
                 'customer': Customer.objects.get(pk=self.kwargs['pk']),
-                'comp': {'name': 'SENTIR HUMANO S.A.S', 'ruc': 'NIT 9011758345', 'address': 'CARRERA 13 17 40, ARMENIA, QUINDIO'},
-                'icon': '{}{}'.format(settings.MEDIA_URL, 'logo.png')
             }
             html = template.render(context)
             pisaStatus = pisa.CreatePDF(

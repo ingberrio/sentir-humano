@@ -1,14 +1,11 @@
+from django.conf import settings
 from datetime import datetime
-from django.contrib.admin.widgets import AdminDateWidget
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.urls import reverse_lazy
-from sqlalchemy import true
 from memberships.models import Membership
 from suppliers.models import Service
 from users.models import NewUser
 from django.utils import timezone
-from django.conf import settings
+from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 import re
 from simple_history.models import HistoricalRecords
@@ -107,12 +104,10 @@ class Customer(AbstractBaseUser, models.Model):
     # Method that subtraction to show in field value
     
     def save(self, *args, **kwargs):
-        if self.person_id == "Sentir Humanos's App":
-            return # Sentir shall never have him own App!
-        else:
+       
             # Save the memmership value in value field
-            mem_int = str(self.membership_id)
-            mem_int = re.findall('[0-9]+', mem_int)
+            mem_int = self.membership_id
+            mem_int = re.findall('[0-9]+', str(mem_int))
             if mem_int:
                 self.value = int(mem_int.pop()) - self.payment_descount
             else:
