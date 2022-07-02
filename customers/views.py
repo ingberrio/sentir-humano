@@ -1,6 +1,7 @@
 from django.views.generic import View
 from django.conf import settings
 import os
+from io import BytesIO
 from django.template.loader import get_template
 from customers.models import Invoice, Customer
 from xhtml2pdf import pisa
@@ -48,7 +49,7 @@ class InvoicePdfView(View):
             }
             html = template.render(context)
             pisaStatus = pisa.CreatePDF(
-                html, dest=response,
+                BytesIO(html.encode("ISO-8859-1")), dest=response,
                 link_callback=self.link_callback
             )
             if pisaStatus.err:
@@ -97,7 +98,7 @@ class CustomerPdfView(View):
             }
             html = template.render(context)
             pisaStatus = pisa.CreatePDF(
-                html, dest=response,
+                BytesIO(html.encode("ISO-8859-1")), dest=response,
                 link_callback=self.link_callback
             )
             if pisaStatus.err:
