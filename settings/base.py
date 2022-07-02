@@ -172,7 +172,7 @@ JAZZMIN_SETTINGS = {
     "copyright": "Sentir Humano",
 
     # The model admin to search from the search bar, search bar omitted if excluded
-    "search_model": "auth.User",
+    "search_model": "",
 
     # Field name on user model that contains avatar ImageField/URLField/Charfield or a callable that receives the user
     "user_avatar": None,
