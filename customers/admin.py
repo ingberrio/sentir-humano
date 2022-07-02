@@ -123,9 +123,9 @@ class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
     actions = ["export_as_csv"]
 
     def get_urls(self):
-        urls = super(UserAdmin, self).get_urls()
+        urls = super().get_urls()
         custom_urls = [
-            path('credentialPDF/<int:pk>',  CustomerPdfView.as_view(), name='credentialPDF' )
+            path('credentialPDF/<str:pk>',  CustomerPdfView.as_view(), name='credentialPDF' )
         ]
         return custom_urls + urls
     

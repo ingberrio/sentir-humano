@@ -5,7 +5,7 @@ from django.template.loader import get_template
 from customers.models import Invoice, Customer
 from xhtml2pdf import pisa
 from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 
 class InvoicePdfView(View):
 
@@ -38,7 +38,7 @@ class InvoicePdfView(View):
     def get(self, request, *args, **kwargs):
         response = ''
         response = HttpResponse(content_type='application/pdf')
-        #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
             template = get_template('admin/invoice.html')
             context = {
@@ -56,7 +56,7 @@ class InvoicePdfView(View):
             return response
         except:
             pass
-        return HttpResponseRedirect(reverse('customer:generatePDF')) 
+        return HttpResponseRedirect(reverse_lazy('customer:generatePDF')) 
 
 class CustomerPdfView(View):
 
@@ -89,11 +89,11 @@ class CustomerPdfView(View):
     def get(self, request, *args, **kwargs):
         response = ''
         response = HttpResponse(content_type='application/pdf')
-        #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
             template = get_template('admin/credential.html')
             context = {
-                'customer': Customer.objects.get(pk=self.kwargs['pk']),
+                'customer': Customer.objects.filter(pk=self.kwargs['pk']),
             }
             html = template.render(context)
             pisaStatus = pisa.CreatePDF(
@@ -105,7 +105,7 @@ class CustomerPdfView(View):
             return response
         except:
             pass
-        return HttpResponseRedirect(reverse('customer:credentialPDF')) 
+        return HttpResponseRedirect(reverse_lazy('customer:credentialPDF')) 
 
 
 
