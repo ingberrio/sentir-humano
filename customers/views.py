@@ -1,7 +1,6 @@
 from django.views.generic import View
 from django.conf import settings
 import os
-from io import BytesIO
 from django.template.loader import get_template
 from customers.models import Invoice, Customer
 from xhtml2pdf import pisa
@@ -39,7 +38,7 @@ class InvoicePdfView(View):
     def get(self, request, *args, **kwargs):
         response = ''
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
+        #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
             template = get_template('admin/invoice.html')
             context = {
@@ -49,7 +48,7 @@ class InvoicePdfView(View):
             }
             html = template.render(context)
             pisaStatus = pisa.CreatePDF(
-                BytesIO(html.encode("ISO-8859-1")), dest=response,
+                html, dest=response,
                 link_callback=self.link_callback
             )
             if pisaStatus.err:
@@ -90,15 +89,15 @@ class CustomerPdfView(View):
     def get(self, request, *args, **kwargs):
         response = ''
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
+        #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
             template = get_template('admin/credential.html')
             context = {
-                'customer': Customer.objects.filter(pk=self.kwargs['pk']),
+                'customer': Customer.objects.get(pk=self.kwargs['pk']),
             }
             html = template.render(context)
             pisaStatus = pisa.CreatePDF(
-                BytesIO(html.encode("ISO-8859-1")), dest=response,
+                html, dest=response,
                 link_callback=self.link_callback
             )
             if pisaStatus.err:
@@ -106,7 +105,7 @@ class CustomerPdfView(View):
             return response
         except:
             pass
-        return HttpResponseRedirect(reverse_lazy('customer:credentialPDF')) 
+        return HttpResponseRedirect(reverse('customer:credentialPDF')) 
 
 
 

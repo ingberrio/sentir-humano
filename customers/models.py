@@ -112,11 +112,24 @@ class Customer(AbstractBaseUser, models.Model):
                 self.value = int(mem_int.pop()) - self.payment_descount
             else:
                 self.value = 0
+            
+            if self.status_membership == 'INCONVENIENTE':
+                 self.status_membership = 'INCONVENIENTE'
+                 self.is_active = False
+            elif self.value > 0:
+                 self.status_membership = 'COBRO'
+                 self.is_active = True
+            else:
+                self.status_membership = 'PAGO'
+                self.is_active = True
+            
             super().save(*args, **kwargs)
+            
              
 
     def __str__(self):
         titular = self.is_main
+
         if titular == True:
             titular = 'Titular'
         else:
@@ -142,6 +155,7 @@ class Appointment(models.Model):
     is_confirm = models.BooleanField("Confirmada", default=False)
     is_cancel = models.BooleanField("Cancelada", default=False)
     history = HistoricalRecords()
+    
     class Meta:
         verbose_name = _("Citas")
         verbose_name_plural = _("Citas")
@@ -153,16 +167,24 @@ class Invoice(models.Model):
     customer = models.ForeignKey(Customer, to_field='id', null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
     contribution_date = models.DateTimeField("Fecha de aporte", default=timezone.now)
     pay_method = models.CharField("Metodo de pago",choices=PAY_METHOD, default='DIGITADO', max_length=100)
+    buffer_full_payment = models.DecimalField('Ultimo abono', blank=True, max_digits=10, decimal_places = 0, default=0)
     full_payment = models.DecimalField('Total abono', blank=True, max_digits=10, decimal_places = 0, help_text='Solo numeros', default=0)
-    balance = models.DecimalField('Saldo', blank=True, max_digits=10, decimal_places = 0)
+    balance = models.DecimalField('Saldo', blank=True, max_digits=10, decimal_places = 0, default=0)
     status = models.CharField('Estado admin', choices=STATUS, default='DIGITADO', max_length=100)
     notes = models.TextField("Notas", max_length=500, blank=True)
     added_by = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
     history = HistoricalRecords()
-    
+
     # Method that subtraction
     def save(self, *args, **kwargs):
-        self.balance =int(self.customer.value - self.full_payment)
+        if self.balance == 0:
+            self.buffer_full_payment = self.full_payment
+            self.balance =int(self.customer.value - self.full_payment)
+            self.full_payment = self.full_payment - self.full_payment
+        else:
+           self.balance = int(self.balance - self.full_payment)
+           self.buffer_full_payment = self.full_payment
+           self.full_payment = self.full_payment - self.full_payment
         super().save(*args, **kwargs)
 
     class Meta:

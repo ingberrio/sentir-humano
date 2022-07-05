@@ -8,6 +8,8 @@ from django.http import HttpResponse
 from django.utils.html import format_html
 from simple_history.admin import SimpleHistoryAdmin
 from customers.views import InvoicePdfView, CustomerPdfView
+from datetime import datetime
+from django.contrib import messages
 
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
@@ -33,8 +35,8 @@ class ExportCsvMixin:
 class InvoiceAdmin(SimpleHistoryAdmin):
     
     list_display = ('customer', 'contribution_date', 'added_by', 'balance', 'status', 'generatePDF' )
-    readonly_fields = ('get_value','contribution_date','added_by', 'balance' )
-    fields = ('contribution_date', 'customer', 'pay_method', 'full_payment', 'balance', 'status', 'added_by', 'notes')
+    readonly_fields = ('get_value','contribution_date','added_by', 'balance', 'buffer_full_payment' )
+    fields = ('contribution_date', 'customer', 'pay_method','buffer_full_payment', 'full_payment', 'balance', 'status', 'added_by', 'notes')
     search_fields = ['customer__first_name', 'customer__person_id']
     list_filter = ('balance','contribution_date')
     
@@ -90,14 +92,21 @@ class AppointmentAdmin(SimpleHistoryAdmin):
     list_per_page = 10
     actions = ["generate_bill"]
 
-    # Method that create user on field added_by
+    # Method that record added_by on user field
 
     def save_form(self, request, form, change):
         obj = super().save_form(request, form, change)
-        if not change:
+        now = datetime.today().date()
+        start = obj.customer.endsAt.date()
+        
+        if start < now:
+            messages.error(request, "Verifique la fecha de afiliación")
+            return obj
+        else:
             obj.added_by = request.user
-        return obj
+            return obj
 
+        
     # showing current user accounts appoiments
     
     def get_queryset(self, request):
@@ -123,15 +132,15 @@ class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
     actions = ["export_as_csv"]
 
     def get_urls(self):
-        urls = super().get_urls()
+        urls = super(UserAdmin, self).get_urls()
         custom_urls = [
-            path('credentialPDF/<str:pk>',  CustomerPdfView.as_view(), name='credentialPDF' )
+            path('credentialPDF/<int:pk>',  CustomerPdfView.as_view(), name='credentialPDF' )
         ]
         return custom_urls + urls
     
     def credentialPDF(self, obj):
         return format_html(
-            "<a href='credentialPDF/{}' class='btn btn-outline-danger'  >Generar Carnet</a>",
+            "<a href='credentialPDF/{}' class='btn btn-outline-danger'>Carnet</a>",
             (obj.id),
         )
           

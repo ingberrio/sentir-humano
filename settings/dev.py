@@ -2,7 +2,7 @@ from .base import *
 
 SECRET_KEY = '21nbd3$ef+jmvr6$3dku0fwgke1*2%2^8+fzlc7r#tktya*n@d'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
