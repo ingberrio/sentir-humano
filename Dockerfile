@@ -1,8 +1,11 @@
-# syntax=docker/dockerfile:1
-FROM python:3
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-WORKDIR /code
-COPY requirements.txt /code/
-RUN pip install -r requirements.txt
-COPY . /code/
+FROM python:3.8.3-slim
+COPY . /sentir
+WORKDIR /sentir
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV DEBUG 0
+RUN python3 -m venv /opt/venv
+COPY . .
+RUN pip3 install -r requirements.txt
+CMD ["python3", "main.py"]
+ENV secret_key=abc123

@@ -12,6 +12,6 @@ import os
 from django.core.wsgi import get_wsgi_application
 from dj_static import Cling
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sentir.settings.dev')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.dev')
 
 application = Cling(get_wsgi_application())

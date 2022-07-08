@@ -32,14 +32,14 @@ PAY_METHOD = [
         ('OTRO', 'OTRO')
 ]
 
-CITY =[
+CITY = [
     ('ARMENIA', 'ARMENIA'),
     ('CARTAGO', 'CARTAGO'),
     ('QUIMBAYA', 'QUIMBAYA'),
     ('PEREIRA', 'PEREIRA')
 ]
 
-STATUS_MEMBERSHIP =[
+STATUS_MEMBERSHIP = [
     ('COBRO', 'COBRO'),
     ('PAGO', 'PAGO'),
     ('INCONVENIENTE', 'INCONVENIENTE'),
@@ -51,8 +51,10 @@ GENER = [
     ('MASCULINO', 'MASCULINO'),
     ('OTRO', 'OTRO'),
 ]
+
+
 class Customer(AbstractBaseUser, models.Model):
-    #General section
+    # General section
     first_name = models.CharField("Nombres", max_length=255)
     last_name = models.CharField("Apellidos", max_length=255)
     person_id = models.CharField("Cedula", max_length=20, default=' ', unique=True)
@@ -65,7 +67,7 @@ class Customer(AbstractBaseUser, models.Model):
     value = models.DecimalField("Valor a pagar =", blank=True, max_digits=10, decimal_places = 0, default='0')
     password = models.CharField("Password", max_length=255, default='pbkdf2_sha256$320000$iNI4Mj0nXAjmeRiNnWwZsG$M5fBt/nVaKFdXO35PW+S/paCXgaOcdFZsI6TpAOtx84=')
     address_to_pay =  models.CharField("Direccion para cobrar", blank=True, null=True, max_length=255)
-    payment_descount = models.DecimalField('Descuento', blank=True, max_digits=10, decimal_places = 0, help_text='Solo numeros', default=0)
+    payment_descount = models.DecimalField('Descuento', blank=True, max_digits=10, decimal_places = 0, help_text='Solo numeros', default='0')
     #Afiliates section
     affiliate_one_customer = models.ForeignKey("self", related_name='one', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Afiliado Uno')
     affiliate_two_customer = models.ForeignKey("self", related_name='two', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Afiliado Dos')
@@ -108,20 +110,31 @@ class Customer(AbstractBaseUser, models.Model):
             # Save the memmership value in value field
             mem_int = self.membership_id
             mem_int = re.findall('[0-9]+', str(mem_int))
-            if mem_int:
+            
+            # Get the id of invoice to verify balance is in 0 to put status
+            query_invoice = Invoice.objects.filter(customer_id=self.id).values('balance').first()
+            
+            # If not empty
+            if query_invoice is not None:
+                query_invoice = query_invoice.get('balance')
+
+            if mem_int and self.payment_descount is not None:
                 self.value = int(mem_int.pop()) - self.payment_descount
             else:
                 self.value = 0
             
-            if self.status_membership == 'INCONVENIENTE':
+            
+
+            if self.status_membership == 'INCONVENIENTE' :
                  self.status_membership = 'INCONVENIENTE'
                  self.is_active = False
             elif self.value > 0:
                  self.status_membership = 'COBRO'
                  self.is_active = True
+            elif  not self.membership_id:
+                 self.is_active = False
             else:
-                self.status_membership = 'PAGO'
-                self.is_active = True
+                self.status_membership = 'PAGO'  
             
             super().save(*args, **kwargs)
             
@@ -164,6 +177,7 @@ class Appointment(models.Model):
         return self.type_appointment
 
 class Invoice(models.Model):
+    
     customer = models.ForeignKey(Customer, to_field='id', null=True, on_delete=models.SET_NULL, verbose_name='Cliente')
     contribution_date = models.DateTimeField("Fecha de aporte", default=timezone.now)
     pay_method = models.CharField("Metodo de pago",choices=PAY_METHOD, default='DIGITADO', max_length=100)
@@ -175,17 +189,31 @@ class Invoice(models.Model):
     added_by = models.ForeignKey(NewUser, on_delete=models.SET_NULL, null=True, verbose_name="Creado por", blank=True)
     history = HistoricalRecords()
 
-    # Method that subtraction
+    # Remaining method
     def save(self, *args, **kwargs):
+        
+        
         if self.balance == 0:
             self.buffer_full_payment = self.full_payment
-            self.balance =int(self.customer.value - self.full_payment)
-            self.full_payment = self.full_payment - self.full_payment
-        else:
-           self.balance = int(self.balance - self.full_payment)
-           self.buffer_full_payment = self.full_payment
-           self.full_payment = self.full_payment - self.full_payment
-        super().save(*args, **kwargs)
+            #self.balance =int(self.customer.value - self.full_payment)
+            #self.full_payment = self.full_payment - self.full_payment
+            # Save a data in a field the other model (Foreingkey)
+            self.customer.status_membership = 'PAGO'
+            self.customer.value = 0
+            self.customer.is_active = True
+            self.customer.save()
+            super().save(*args, **kwargs)
+        else: 
+            #self.balance = int(self.balance - self.full_payment)
+            self.buffer_full_payment = self.full_payment
+            #self.full_payment = self.full_payment - self.full_payment
+            # Save a data in a field the other model (Foreingkey)
+            self.customer.status_membership = 'COBRO'
+            self.customer.value = self.full_payment
+            self.customer.is_active = True
+            self.customer.save()
+            super().save(*args, **kwargs)
+        
 
     class Meta:
         verbose_name = _("Recibos")

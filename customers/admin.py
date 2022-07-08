@@ -35,7 +35,7 @@ class ExportCsvMixin:
 class InvoiceAdmin(SimpleHistoryAdmin):
     
     list_display = ('customer', 'contribution_date', 'added_by', 'balance', 'status', 'generatePDF' )
-    readonly_fields = ('get_value','contribution_date','added_by', 'balance', 'buffer_full_payment' )
+    readonly_fields = ('get_value','contribution_date','added_by', 'buffer_full_payment' )
     fields = ('contribution_date', 'customer', 'pay_method','buffer_full_payment', 'full_payment', 'balance', 'status', 'added_by', 'notes')
     search_fields = ['customer__first_name', 'customer__person_id']
     list_filter = ('balance','contribution_date')
