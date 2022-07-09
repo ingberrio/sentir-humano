@@ -200,7 +200,6 @@ class Invoice(models.Model):
             # Save a data in a field the other model (Foreingkey)
             self.customer.status_membership = 'PAGO'
             self.customer.value = 0
-            self.customer.is_active = True
             self.customer.save()
             super().save(*args, **kwargs)
         else: 
