@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 import re
 from simple_history.models import HistoricalRecords
 from django.contrib import messages
+from dateutil.relativedelta import relativedelta
 
 
 PAY_CHOICES = [
@@ -92,7 +93,7 @@ class Customer(AbstractBaseUser, models.Model):
     creator_by = models.ForeignKey(NewUser, related_name='created_by', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Creado por')
     description = models.TextField("Notas", blank=True, null=True)
     createdAt = models.DateTimeField("Inicio Cobro",blank=True, null=True)
-    endsAt = models.DateTimeField('Finalizacion', blank=True, null=True)
+    endsAt = models.DateTimeField('Finalizacion', blank=True, null=True, default=datetime.now() + relativedelta(years = 1))
     is_active = models.BooleanField("Activo", default=False)
     is_main = models.BooleanField("Titular", default=False)
     status_membership = models.CharField('Estado', choices=STATUS_MEMBERSHIP, default='DIGITADO', max_length=100)
@@ -138,12 +139,19 @@ class Customer(AbstractBaseUser, models.Model):
 
     def __str__(self):
         titular = self.is_main
+        cadena = ''
+        # Validation of finish membership
+        now = datetime.today().date()
+        start = self.endsAt.date()
         
-        if titular == True:
-            titular = 'Titular'
-        else:
-            titular = 'Afliado'
-        cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
+        if start is not None:
+            if start > now:
+
+                if titular == True:
+                    titular = 'Titular'
+                else:
+                    titular = 'Afliado'
+                cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
         
         return cadena
 
