@@ -97,11 +97,6 @@ class AppointmentAdmin(SimpleHistoryAdmin):
 
     def save_form(self, request, form, change):
         obj = super().save_form(request, form, change)
-        now = datetime.today().date()
-        start = obj.customer.endsAt.date()
-        
-        if start < now:
-            messages.error(request, "Verifique la fecha de afiliación")
         
         obj.added_by = request.user
         return obj

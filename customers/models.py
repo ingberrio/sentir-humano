@@ -144,12 +144,13 @@ class Customer(AbstractBaseUser, models.Model):
         now = datetime.today().date()
         start = self.endsAt.date()
         
-        if start > now:
-            if titular == True:
-                titular = 'Titular'
-            else:
-                titular = 'Afliado'
-            cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
+        if start is not None:
+            if start > now:
+                if titular == True:
+                    titular = 'Titular'
+                else:
+                    titular = 'Afliado'
+                cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
         
         return cadena
 
