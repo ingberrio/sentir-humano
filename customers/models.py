@@ -138,19 +138,12 @@ class Customer(AbstractBaseUser, models.Model):
 
     def __str__(self):
         titular = self.is_main
-        cadena = ''
         
-        # Validation of finish membership
-        now = datetime.today().date()
-        start = self.endsAt.date()
-        
-        if start is not None:
-            if start > now:
-                if titular == True:
-                    titular = 'Titular'
-                else:
-                    titular = 'Afliado'
-                cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
+        if titular == True:
+            titular = 'Titular'
+        else:
+            titular = 'Afliado'
+        cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
         
         return cadena
 
