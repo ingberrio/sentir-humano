@@ -17,10 +17,12 @@ class Supplier(AbstractBaseUser):
     createdAt = models.DateTimeField("Creado", auto_now_add=True)
     is_active = models.BooleanField('Activo',default=False)
     
+
     class Meta:
         verbose_name = _("Proveedores")
         verbose_name_plural = _("Proveedores")
-
+        ordering = ['-id']
+        
     USERNAME_FIELD = 'email'
     
     def __str__(self):

@@ -54,3 +54,6 @@ def home(request):
 
 def about(request):
     return render(request, 'about.html/')
+
+def banks(request):
+    return render(request, 'banks.html/')

@@ -25,6 +25,7 @@ urlpatterns = [
     path('', include('customers.urls')),
     path('', home_views.home, name='home'),
     path('about/', home_views.about, name='about'),
+    path('banks/', home_views.banks, name='banks'),
 ]
 
 

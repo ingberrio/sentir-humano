@@ -15,7 +15,8 @@
     
     <!-- Style front-->
     <link rel="stylesheet" type="text/css" href="{% static 'front/css/front.css' %}" />
-
+    <link rel="stylesheet" type="text/css" href="{% static 'front/css/banks.css' %}" />
+    <link rel="icon" href="{% static 'front/img/logo.png' %}" sizes="32x32" type="image/png">
     <title>Sentir Humano</title>
   </head>
   <body>
@@ -28,10 +29,13 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'home' %}">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{% url 'home' %}">Inicio <span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="{% url 'about' %}">Nosotros <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="{% url 'about' %}">Nosotros<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'banks' %}">Pagos<span class="sr-only">(current)</span></a>
           </li>
           <li class="nav-item active">
             <a class="nav-link" href="/admin">Admin <span class="sr-only">(current)</span></a>

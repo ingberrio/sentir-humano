@@ -11,6 +11,7 @@ from customers.views import InvoicePdfView, CustomerPdfView
 from datetime import datetime
 from django.contrib import messages
 
+
 class ExportCsvMixin:
     def export_as_csv(self, request, queryset):
 
@@ -101,10 +102,9 @@ class AppointmentAdmin(SimpleHistoryAdmin):
         
         if start < now:
             messages.error(request, "Verifique la fecha de afiliación")
-            return obj
-        else:
-            obj.added_by = request.user
-            return obj
+        
+        obj.added_by = request.user
+        return obj
 
         
     # showing current user accounts appoiments

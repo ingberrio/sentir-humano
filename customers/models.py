@@ -9,6 +9,8 @@ from django.contrib.auth.models import AbstractBaseUser
 from django.utils.translation import gettext_lazy as _
 import re
 from simple_history.models import HistoricalRecords
+from django.contrib import messages
+
 
 PAY_CHOICES = [
         ('1', 'Contado'),
@@ -122,19 +124,13 @@ class Customer(AbstractBaseUser, models.Model):
                 self.value = int(mem_int.pop()) - self.payment_descount
             else:
                 self.value = 0
-            
-            
 
             if self.status_membership == 'INCONVENIENTE' :
                  self.status_membership = 'INCONVENIENTE'
                  self.is_active = False
-            elif self.value > 0:
-                 self.status_membership = 'COBRO'
-                 self.is_active = True
             elif  not self.membership_id:
                  self.is_active = False
-            else:
-                self.status_membership = 'PAGO'  
+           
             
             super().save(*args, **kwargs)
             
@@ -142,12 +138,19 @@ class Customer(AbstractBaseUser, models.Model):
 
     def __str__(self):
         titular = self.is_main
-
-        if titular == True:
-            titular = 'Titular'
-        else:
-            titular = 'Afliado'
-        cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
+        cadena = ''
+        
+        # Validation of finish membership
+        now = datetime.today().date()
+        start = self.endsAt.date()
+        
+        if start > now:
+            if titular == True:
+                titular = 'Titular'
+            else:
+                titular = 'Afliado'
+            cadena = titular+" "+self.person_id+" - "+self.first_name+" - $"+str(self.value)
+        
         return cadena
 
 class Appointment(models.Model):
@@ -193,16 +196,7 @@ class Invoice(models.Model):
     def save(self, *args, **kwargs):
         
         
-        if self.balance == 0:
-            self.buffer_full_payment = self.full_payment
-            #self.balance =int(self.customer.value - self.full_payment)
-            #self.full_payment = self.full_payment - self.full_payment
-            # Save a data in a field the other model (Foreingkey)
-            self.customer.status_membership = 'PAGO'
-            self.customer.value = 0
-            self.customer.save()
-            super().save(*args, **kwargs)
-        else: 
+        if self.balance != 0:
             #self.balance = int(self.balance - self.full_payment)
             self.buffer_full_payment = self.full_payment
             #self.full_payment = self.full_payment - self.full_payment
@@ -211,7 +205,16 @@ class Invoice(models.Model):
             self.customer.value = self.full_payment
             self.customer.is_active = True
             self.customer.save()
-            super().save(*args, **kwargs)
+            
+        else: 
+            self.buffer_full_payment = self.full_payment
+            #self.balance =int(self.customer.value - self.full_payment)
+            #self.full_payment = self.full_payment - self.full_payment
+            # Save a data in a field the other model (Foreingkey)
+            self.customer.status_membership = 'PAGO'
+            self.customer.value = 0
+            self.customer.save()
+        super().save(*args, **kwargs)
         
 
     class Meta:
