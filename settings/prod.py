@@ -11,7 +11,7 @@ ALLOWED_HOSTS = [
     'https://sentir-humano.herokuapp.com/',
     'https://sentir-s3-bucket.s3.amazonaws.com/'
     ]
-CSRF_TRUSTED_ORIGINS = ['https://sentir-humano.herokuapp.com/']
+CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com/', 'https://*.127.0.0.1']
 
 # Amazon S3 Settings
 
