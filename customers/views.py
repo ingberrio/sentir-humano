@@ -38,7 +38,7 @@ class InvoicePdfView(View):
     def get(self, request, *args, **kwargs):
         response = ''
         response = HttpResponse(content_type='application/pdf')
-        #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
+        response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
             template = get_template('admin/invoice.html')
             context = {
