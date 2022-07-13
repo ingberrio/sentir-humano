@@ -38,7 +38,7 @@ class InvoicePdfView(View):
     def get(self, request, *args, **kwargs):
         response = ''
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
+        #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
             template = get_template('admin/invoice.html')
             context = {
@@ -56,7 +56,7 @@ class InvoicePdfView(View):
             return response
         except:
             pass
-        return HttpResponseRedirect(reverse_lazy('customer:generatePDF')) 
+        return reverse_lazy('customer:generatePDF') 
 
 class CustomerPdfView(View):
 
@@ -89,7 +89,7 @@ class CustomerPdfView(View):
     def get(self, request, *args, **kwargs):
         response = ''
         response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
+        #response['Content-Disposition'] = 'attachment; filename="recibo.pdf"'
         try:
             template = get_template('admin/credential.html')
             context = {
