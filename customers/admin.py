@@ -41,19 +41,19 @@ class InvoiceAdmin(SimpleHistoryAdmin):
     search_fields = ['customer__first_name', 'customer__person_id']
     list_filter = ('balance','contribution_date')
     
-    
+    def generatePDF(self, obj):
+        return format_html(
+            "<a href='generatePDF/{}' class='btn btn-outline-danger float-right' >Exportat PDF</a>" %
+            (obj.id),
+        )
     def get_urls(self):
-        urls = super(InvoiceAdmin, self).get_urls()
+        urls = super().get_urls()
         custom_urls = [
             path('generatePDF/<int:pk>',  InvoicePdfView.as_view(), name='generatePDF' )
         ]
         return custom_urls + urls
     
-    def generatePDF(self, obj):
-        return format_html(
-            "<a href='generatePDF/{}' class='btn btn-outline-danger float-right' >Exportat PDF</a>",
-            (obj.id),
-        )
+    
     
 
     # Method that show the field value of costumer on innvoice
