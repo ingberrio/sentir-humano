@@ -7,6 +7,8 @@ from xhtml2pdf import pisa
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 
+
+
 class InvoicePdfView(View):
     model = Invoice
     def link_callback(self, uri, rel):
@@ -56,7 +58,7 @@ class InvoicePdfView(View):
             return response
         except:
             pass
-        return HttpResponse(reverse_lazy('customer:generatePDF'))
+        return HttpResponseRedirect(reverse_lazy('customer:generatePDF')) 
 
 class CustomerPdfView(View):
 
@@ -105,7 +107,4 @@ class CustomerPdfView(View):
             return response
         except:
             pass
-        return HttpResponseRedirect(reverse('customer:credentialPDF')) 
-
-
-
+        return HttpResponseRedirect(reverse_lazy('customer:credentialPDF')) 
