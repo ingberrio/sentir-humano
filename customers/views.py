@@ -56,7 +56,7 @@ class InvoicePdfView(View):
             return response
         except:
             pass
-        return reverse_lazy('customer:generatePDF') 
+        return HttpResponse(reverse_lazy('customer:generatePDF'))
 
 class CustomerPdfView(View):
 
