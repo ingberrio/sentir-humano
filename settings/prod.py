@@ -11,6 +11,7 @@ ALLOWED_HOSTS = [
     'https://sentir-humano.herokuapp.com/',
     'https://sentir-s3-bucket.s3.amazonaws.com/'
     'https://soysentirhumano.com/'
+    'https://82.180.137.61/'
     ]
 CSRF_TRUSTED_ORIGINS = ['https://*.herokuapp.com/', 'https://*.127.0.0.1', 'https://*.soysentirhumano.com/']
 
