@@ -1,5 +1,5 @@
 <!-- base.html -->
-{% load static %}
+
 <!DOCTYPE html>
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -36,7 +36,9 @@
     }
 </style>
 <body>
-    
+    {% load static %}
+    <img src="{{request.META.HTTP_HOST}}{% static 'front/img/logo_soy.png' %}" width="220" height="108" class="head" alt="">
+
     <p class="head">
         {{ comp.name|upper }}<br>
         {{ comp.ruc }}<br>
