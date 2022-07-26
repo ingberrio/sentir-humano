@@ -43,7 +43,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     end_date = models.DateTimeField(null=True, blank=True)
     about = models.TextField(_('Observaciones'), max_length=500, blank=True)
     real_id = models.CharField(_('Cedula'),max_length=20, unique=True)
-    is_staff = models.BooleanField(_('Empleado'),default=False)
+    is_staff = models.BooleanField(_('Empleado'),default=True)
     is_active = models.BooleanField(_('Activo'),default=False)
     
     class Meta:

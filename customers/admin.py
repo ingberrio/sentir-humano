@@ -10,6 +10,7 @@ from simple_history.admin import SimpleHistoryAdmin
 from customers.views import InvoicePdfView, CustomerPdfView
 from datetime import datetime
 from django.contrib import messages
+from django.db.models import Q
 
 
 class ExportCsvMixin:
@@ -84,11 +85,11 @@ class InvoiceAdmin(SimpleHistoryAdmin):
 class AppointmentAdmin(SimpleHistoryAdmin):
     
     list_editable = ['is_confirm', 'is_cancel']
-    list_display = ["customer", "type_appointment",  "added_by", 'service',  "is_confirm", "is_cancel"]
+    list_display = ["customer", "type_appointment",  "added_by", "service",  "is_confirm", "is_cancel"]
     fields = ('start_date', 'added_by', 'customer', 'type_appointment', 'service','end_date', 'about', 'is_confirm', 'is_cancel')
     search_fields = ['customer__first_name', 'customer__person_id']
     readonly_fields = ('start_date','added_by')
-    list_filter = ["start_date", "service", "added_by" ]
+    list_filter = ["start_date", "service", "added_by", "is_confirm" ]
     exclude = ["password"]
     list_per_page = 10
     actions = ["generate_bill"]
@@ -116,13 +117,13 @@ class AppointmentAdmin(SimpleHistoryAdmin):
 @admin.register(Customer)
 class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
     
-    list_editable = ["is_active"]
-    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", "collector", "status_membership", "gener", "is_collector", 'credentialPDF']
+    list_editable = ["is_active", "collector"]
+    list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", "status_membership", "gener", "is_collector", "collector", "credentialPDF"]
     search_fields = ["phone", "email", "person_id", "first_name", "last_name"]
     list_display_links = ["first_name", "person_id"]
     exclude = ('password','last_login')
     readonly_fields = ('value', 'start_date')
-    list_filter = ["age", "is_active", "membership_id", "is_collector", 'status_membership']
+    list_filter = ["age", "is_active", "membership_id", "is_collector", "status_membership", "is_main", "createdAt", "city"]
     list_per_page = 10
     actions = ["export_as_csv"]
 
@@ -181,7 +182,7 @@ class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
         if request.user.is_superuser: # just using request.user attributes
             filtered_query = query.filter()
         else:
-            filtered_query = query.filter(creator_by=request.user.id)
+            filtered_query = query.filter(Q(creator_by=request.user.id) | Q(collector=request.user.id))
         return filtered_query
 
     # Just read if not a superuser

@@ -92,8 +92,8 @@ class Customer(AbstractBaseUser, models.Model):
     address =  models.CharField("Dirección", blank=True, null=True, max_length=255)
     creator_by = models.ForeignKey(NewUser, related_name='created_by', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Creado por')
     description = models.TextField("Notas", blank=True, null=True)
-    createdAt = models.DateTimeField("Inicio Cobro",blank=True, null=True)
-    endsAt = models.DateTimeField('Finalizacion', blank=True, null=True, default=datetime.now() + relativedelta(years = 1))
+    createdAt = models.DateTimeField("Fecha Cobro",blank=True, null=True)
+    endsAt = models.DateField('Finalizacion', blank=True, null=True, default=datetime.now() + relativedelta(years = 1))
     is_active = models.BooleanField("Activo", default=False)
     is_main = models.BooleanField("Titular", default=False)
     status_membership = models.CharField('Estado', choices=STATUS_MEMBERSHIP, default='DIGITADO', max_length=100)
@@ -134,9 +134,8 @@ class Customer(AbstractBaseUser, models.Model):
            
             
             super().save(*args, **kwargs)
-            
-             
 
+    
     def __str__(self):
         titular = self.is_main
         cadena = ''
