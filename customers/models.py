@@ -1,5 +1,5 @@
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, date
 from django.db import models
 from memberships.models import Membership
 from suppliers.models import Service
@@ -93,7 +93,7 @@ class Customer(AbstractBaseUser, models.Model):
     creator_by = models.ForeignKey(NewUser, related_name='created_by', null=True, blank=True,  on_delete=models.SET_NULL, verbose_name='Creado por')
     description = models.TextField("Notas", blank=True, null=True)
     createdAt = models.DateTimeField("Fecha Cobro",blank=True, null=True)
-    endsAt = models.DateField('Finalizacion', blank=True, null=True, default=datetime.now() + relativedelta(years = 1))
+    endsAt = models.DateField('Finalizacion', blank=True, null=True, default= date.today() + relativedelta(years = 1))
     is_active = models.BooleanField("Activo", default=False)
     is_main = models.BooleanField("Titular", default=False)
     status_membership = models.CharField('Estado', choices=STATUS_MEMBERSHIP, default='DIGITADO', max_length=100)
@@ -102,6 +102,7 @@ class Customer(AbstractBaseUser, models.Model):
     class Meta:
         verbose_name = _("Clientes")
         verbose_name_plural = _("Clientes")
+        db_table = "customers_customer"
     
     USERNAME_FIELD = 'email'
 
@@ -140,12 +141,11 @@ class Customer(AbstractBaseUser, models.Model):
         titular = self.is_main
         cadena = ''
         # Validation of finish membership
-        now = datetime.today().date()
-        start = self.endsAt.date()
+        now = date.today()
+        start = self.endsAt
         
         if start is not None:
             if start > now:
-
                 if titular == True:
                     titular = 'Titular'
                 else:

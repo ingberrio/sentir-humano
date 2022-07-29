@@ -1,4 +1,5 @@
 from django.utils.translation import gettext_lazy as _
+from import_export.admin import ImportExportModelAdmin
 from django.contrib import admin
 from django.urls import path
 from home import views
@@ -11,6 +12,10 @@ from customers.views import InvoicePdfView, CustomerPdfView
 from datetime import datetime
 from django.contrib import messages
 from django.db.models import Q
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django import forms
+from django.shortcuts import render
 
 
 class ExportCsvMixin:
@@ -112,10 +117,10 @@ class AppointmentAdmin(SimpleHistoryAdmin):
         else:
             filtered_query = query.filter(added_by=request.user.id)
         return filtered_query
-    
+        
         
 @admin.register(Customer)
-class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
+class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin, ImportExportModelAdmin):
     
     list_editable = ["is_active", "collector"]
     list_display = ["first_name", "phone", "person_id", "is_active", "membership_id", "status_membership", "gener", "is_collector", "collector", "credentialPDF"]
@@ -130,7 +135,7 @@ class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
     def get_urls(self):
         urls = super(UserAdmin, self).get_urls()
         custom_urls = [
-            path('credentialPDF/<int:pk>',  CustomerPdfView.as_view(), name='credentialPDF' )
+            path('credentialPDF/<int:pk>',  CustomerPdfView.as_view(), name='credentialPDF' ),
         ]
         return custom_urls + urls
     
@@ -191,6 +196,3 @@ class UserAdmin(SimpleHistoryAdmin, ExportCsvMixin):
             return super(UserAdmin, self).get_readonly_fields(request, obj)
         else:
             return ('collector', 'status_membership', 'creator_by', 'start_date', 'asesor_id')
-
-    
-    
